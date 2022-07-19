@@ -20,7 +20,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 
-# Complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 12 am on Aug 22, 2022. 
+# Complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 12 am on Aug 22, 2022. Make sure to read all the materials provided or Muffin and Pico will hunt you down.
 
 
 ```{r, include = FALSE}
