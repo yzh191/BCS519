@@ -3,15 +3,15 @@ title: "Homework_0"
 author: "Oviya Mohan & Yue Zhang"
 date: "7/19/2022"
 output:
+  html_document:
+    df_print: paged
+    toc: yes
+  word_document:
+    toc: no
   pdf_document:
     latex_engine: xelatex
     number_sections: no
     toc: no
-  word_document:
-    toc: no
-  html_document:
-    df_print: paged
-    toc: yes
 ---
 
 ```{r setup, include=FALSE}
