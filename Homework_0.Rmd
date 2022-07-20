@@ -20,34 +20,37 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 
-# Complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 12 am on Aug 22, 2022. Make sure to read all the materials provided or Muffin and Pico will hunt you down.
+## Introduction
+The purpose of this homework is to set the stage for our stats course as well as get everyone familiar with R and Rmd. Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 11:59 pm on Aug 21, 2022. Make sure to read all the materials provided or Muffin and Pico will hunt you down.
 
 
 ```{r, include = FALSE}
-#Installing and loading libraries 
+# Installing and loading libraries 
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
 ```
 
-## R Markdown
-
+## Resources on R and Rmd
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
 
-### Intro to R - Resources 
 
-
-## Simulating data to work with 
+## Simulation and NHST
+### Simulating Data <a name="data"></a>
 
 ```{r}
 #nothing is ever truly random when "randomly" generated on a computer - always psuedo random
 #set.seed(124) #can be used to get the same "random" sample consistently 
-dog_sample = rnorm(100,20,5)
-cat_sample = rnorm(100,15,2)
+dog_mu = 20
+dog_sigma = 5
+dog_sample = rnorm(100,dog_mu,dog_sigma)
+cat_mu = 15
+cat_sigma = 2
+cat_sample = rnorm(100,cat_mu,cat_sigma)
 
-#random R tip #1: to view any variable, highligh it and Cmd+enter/Ctrl+enter 
+#random R tip #1: to view any variable, highlight it and Cmd+enter/Ctrl+enter 
 
 #summarizing our data  
 dog_mean <- mean(dog_sample)
@@ -79,29 +82,25 @@ plot(hist_dog, xlim = c(5, 40), ylim = c(0,20), col = "blue", main = "Distributi
 legend("topright", c("Dogs", "Cats"), col=c("blue", "Orange"), lwd=5)
 
 ```
-###############
-Q1. Report the mean and sd of the two sample: 
 
-##############
+### Null Hypothesis Signifiance Testing (NHST) 
+Read the following article on NHST: 
+[Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
 
+1. Fill out following table on the statistical summary of the simulated [sample data](#data)
 
+||Mean|Standard Deviation|
+|:---:|:---:|:---:|
+| Dog |     |     |
+| Cat |     |     |
 
-## Null Hypothesis Signifiance Testing (NHST) 
+2. We would like to compare the size of dogs with the size of cats. List out the hypotheses:
+  * Null Hypothesis: <\br>
+  * Alternate Hypothesis: <\br>
 
-### Readings:
-[Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/) 
+3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
 
-#### Storyline for data simulated above: What do we want to test?
-
-Null Hypothesis: 
-Alternate Hypothesis: 
-
-###############
-Q2. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
-
-##############
-
-#### T-test 
+4. T-test 
 Quick Summary: 
 ![T-test Formula](TTtest.png)
 Types: 
@@ -123,7 +122,7 @@ Insert resource for other kinds of tests?
 ```
 Report Normality 
 
-3. Homogeneity - eqaulity of variances 
+3. Homogeneity - equality of variances 
 Levene's Test 
 ```{r}
 
