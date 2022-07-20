@@ -23,7 +23,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ## Introduction 
 
 The purpose of this homework is to set the stage for our stats course as well as get everyone familiar with R and using R Markdown. It will go over some basic concepts, that we have probably already come across often in most introductory statistics courses, and get a discussion going on our understanding and misconceptions about them. Also to get acquainted with the working style of interactive labs. If you have any questions, comments or suggestions - feel free to reach out to us. 
-Establish accountability? 
+
 
 Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 11:59 pm on Aug 21, 2022. <br>
 You can submit just the Rmd but make sure it knits without errors before you do! You can also edit the author and date on top of this document. And make sure to read all the mandatory reading materials provided or Muffin and Pico will hunt you down. There are also a lot of extra resources scattered around, take some time to explore them and if you want to add to them - drop a message on slack and share them! 
@@ -65,7 +65,9 @@ dog_sd <- sd(dog_sample)
 
 cat_mean <- mean(cat_sample)
 cat_sd <- sd(cat_sample)
-
+```
+#### Visualizing data 
+```{r}
 #visualizing data 
 hist_dog <- hist(dog_sample,
 main="Distribution of Dog Sizes",
@@ -88,32 +90,34 @@ breaks = 20
 plot(hist_dog, xlim = c(5, 40), ylim = c(0,20), col = "blue", main = "Distribution of Dog and Cat Sizes", xlab = "Size") + plot(hist_cat, add = TRUE, col = "orange")
 legend("topright", c("Dogs", "Cats"), col=c("blue", "Orange"), lwd=5)
 
+#try other ways to visualize the data here 
+
 ```
 
 ### Null Hypothesis Signifiance Testing (NHST) 
 Read the following article on NHST: 
 [Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
 
-1. Fill out following table on the statistical summary of the simulated [sample data](#data)
+Q1. Insert a code chunk, calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
 
 ||Mean|Standard Deviation|
 |:---:|:---:|:---:|
 | Dog |     |     |
 | Cat |     |     |
 
-2. We would like to compare the size of dogs with the size of cats. List out the hypotheses:
-  * Null Hypothesis: <\br>
-  * Alternate Hypothesis: <\br>
+Q2. We would like to compare the size of dogs with the size of cats. List out the hypotheses: <br>
+  * Null Hypothesis: <br>
+  * Alternate Hypothesis: <br>
 
-3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
+Q3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
 
-4. T-test <br>
+#### T-test <br>
 Types: <br>
-1. One Sample t-test <br>
-2. Independent Two Sample t-test <br>
-3. Paired Two Sample t-test <br>
+* One Sample t-test <br>
+* Independent Two Sample t-test <br>
+* Paired Two Sample t-test <br>
 
-We are using: INDEPENDENT TWO SAMPLE T-TEST - make this a Q? 
+We are using: INDEPENDENT TWO SAMPLE T-TEST
 ![T-test Formula](TTtest.png)
 
 [Welch's t-test]()
@@ -140,12 +144,11 @@ Insert resource for other kinds of tests?
 ```{r}
 # Run the Shapiro-Wilk test for normality here 
 ```
-Report Normality 
+Q4. Report Normality 
 
-What to do if your data isn't normally distributed?
-* Transform Data
-* Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/)
-
+What to do if your data isn't normally distributed? <br>
+- Transform Data <br>
+- Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/) <br>
 
 
 3. Homogeneity - eqaulity of variances <br>
@@ -154,37 +157,62 @@ We want our p-value to be > 0.05! - Our variances should NOT be statistically si
 ```{r}
 
 ```
-Report Homogeniety 
+Q5. Report Homogeniety 
 
-What to do if our variances are not equal? 
-* Correction via the df - automatically done in the Welch's t-test 
+What to do if our variances are not equal? <br>
+- Correction via the df - automatically done in the Welch's t-test 
 
 
-Q3. Based on the results of testing the assumptions, what t-test should we do? 
-Do it here and report the results - APA style! - Should we given an example of how to report? 
+Q6. Based on the results of testing the assumptions, what t-test should we do? 
+Do it here and report the results - [APA style!](https://www.socscistatistics.com/tutorials/ttest/default.aspx)
 
 ```{r}
 #t-test
 ```
 
+### Reporting Resuls and Statical Inferences  
+
+Before jumping to conclusions based on the results of these tests, it is our responsibility to understand what the p-value, confidence intervals and other metrics seen as the output of the t-test really mean and how we can draw conclusions and influences based on them. 
+
+#### p-value  
+[What is a p-value](https://www.youtube.com/watch?v=RVxHlsIw_Do) <br> 
+[Understanding common misconceptions about p-values](http://daniellakens.blogspot.com/2017/12/understanding-common-misconceptions.html)
+Here are some interactive visualizations to play around with in order to truly grasp what a p-value means: <br> 
+* [Understanding p-values Through Simulations](https://rpsychologist.com/pvalue/)
+* [Distribution of p-values when comparing two groups](https://rpsychologist.com/d3/pdist/)
+
+Q7. Explain what a p-value is in your own words. 
+Would you report a result as statistically significant is your p-value was 0.051? What about if it was 0.049? 
+
+The next big issue: [p-hacking](https://www.youtube.com/watch?v=HDCOUXE3HMM)  
+![p-hacking](phack.png)
+
+Try your hand at some [p-hacking](https://projects.fivethirtyeight.com/p-hacking/)
+One thing we can do to overcome this is practice [pre-registration](https://www.cos.io/initiatives/prereg) 
+
+Q8. Would you pre-register a study? Why or why not?
+Is that sufficient to curb p-hacking? 
+
+#### Confidence Intervals
+They give us more ... confidence? Read [this](https://s4be.cochrane.org/blog/2018/04/27/confidence-intervals-should-be-reported/) to get an idea of why they should be reported.  
+[Here](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf) is an APA guide to reporting CIs (among other things).
+
+Q9. Explain what a confidence interval is in your own words. 
+Re-write your report of the t-test results but this time include the confidence interval. 
 
 
-#### The p-value monster 
+#### Statistical Inferences 
 
-###############
-Q4. What is p-hacking?
-
-
-###############
-
-#### Confidence Intervals 
+To be filled... 
 
 
+The goal of this course is get both an implementation and conceptual understanding of the statistical methods commonly used in Brain and Cognitive Sciences. The two main questions we should be able to answer for ourselves at the end are: <br>
+Am I using the correct analysis for my data? <br>
+Are the conclusions and inferences I am drawing from my analysis valid? <br>
 
-
-#### Some food for thought 
-
-List some extra interesting resources 
-
-###############
+## Questions and Comments 
 Below list three questions/comments you have for discussion in the first class based on what you have done above and the readings. At least two of the questions should be conceptual. If you have any syntax/code based doubts, do NOT include them here - ask on Slack. The questions you list here will be voted on along with questions from others and we will be discussing the most popular questions.  
+
+1. <br>
+2. <br>
+3. <br> 
