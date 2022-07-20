@@ -20,8 +20,15 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 
-## Introduction
-The purpose of this homework is to set the stage for our stats course as well as get everyone familiar with R and Rmd. Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 11:59 pm on Aug 21, 2022. Make sure to read all the materials provided or Muffin and Pico will hunt you down.
+## Introduction 
+
+The purpose of this homework is to set the stage for our stats course as well as get everyone familiar with R and using R Markdown. It will go over some basic concepts, that we have probably already come across often in most introductory statistics courses, and get a discussion going on our understanding and misconceptions about them. Also to get acquainted with the working style of interactive labs. If you have any questions, comments or suggestions - feel free to reach out to us. 
+Establish accountability? 
+
+Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by 11:59 pm on Aug 21, 2022. <br>
+You can submit just the Rmd but make sure it knits without errors before you do! You can also edit the author and date on top of this document. And make sure to read all the mandatory reading materials provided or Muffin and Pico will hunt you down. There are also a lot of extra resources scattered around, take some time to explore them and if you want to add to them - drop a message on slack and share them! 
+There are conceptual questions you can answer along the way, as well as some code chunks for you to fill in. Feel free to try out extra visualizations and tests! 
+Post any syntax or code related doubts on slack as soon as you encounter them so we can work on them together. You are also required to list some questions, of a more conceptual nature, at the end of this document - you will find more details about that below. 
 
 
 ```{r, include = FALSE}
@@ -41,7 +48,7 @@ When you click the **Knit** button a document will be generated that includes bo
 ### Simulating Data <a name="data"></a>
 
 ```{r}
-#nothing is ever truly random when "randomly" generated on a computer - always psuedo random
+#nothing is ever truly random when "randomly" generated on a computer - always pseudo random
 #set.seed(124) #can be used to get the same "random" sample consistently 
 dog_mu = 20
 dog_sigma = 5
@@ -59,7 +66,7 @@ dog_sd <- sd(dog_sample)
 cat_mean <- mean(cat_sample)
 cat_sd <- sd(cat_sample)
 
-#visulizing data 
+#visualizing data 
 hist_dog <- hist(dog_sample,
 main="Distribution of Dog Sizes",
 xlab="Size",
@@ -100,14 +107,24 @@ Read the following article on NHST:
 
 3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
 
-4. T-test 
-Quick Summary: 
-![T-test Formula](TTtest.png)
-Types: 
-```{r}
-#one line code for each type of test so that after assumptions, they can choose which one to use and use that? 
-```
+4. T-test <br>
+Types: <br>
+1. One Sample t-test <br>
+2. Independent Two Sample t-test <br>
+3. Paired Two Sample t-test <br>
+
 We are using: INDEPENDENT TWO SAMPLE T-TEST - make this a Q? 
+![T-test Formula](TTtest.png)
+
+[Welch's t-test]()
+```{r}
+#The Independent two sample t-test 
+t.test(dog_sample,cat_sample,var.equal = TRUE)
+
+#The Welch's t-test
+t.test(dog_sample,cat_sample,var.equal = FALSE)
+```
+
 
 ##### Assumptions of a t-test
 1. Independence 
@@ -115,29 +132,41 @@ Well, you can either be a cat or a dog...
 Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
 
 2. Normality 
-For N >= 100, Shapiro-Wilk test for normality 
+For N >= 100, Shapiro-Wilk test for normality <br>
+Or visually, a Q-Q plot <br>
+Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
+
 Insert resource for other kinds of tests?
 ```{r}
-
+# Run the Shapiro-Wilk test for normality here 
 ```
 Report Normality 
 
-3. Homogeneity - equality of variances 
-Levene's Test 
+What to do if your data isn't normally distributed?
+* Transform Data
+* Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/)
+
+
+
+3. Homogeneity - eqaulity of variances <br>
+Levene's Test of Equality of Variance - gives you a F statistic <br>
+We want our p-value to be > 0.05! - Our variances should NOT be statistically significanlty different. <br> 
 ```{r}
 
 ```
 Report Homogeniety 
 
+What to do if our variances are not equal? 
+* Correction via the df - automatically done in the Welch's t-test 
 
-###############
+
 Q3. Based on the results of testing the assumptions, what t-test should we do? 
 Do it here and report the results - APA style! - Should we given an example of how to report? 
 
 ```{r}
 #t-test
 ```
-###############
+
 
 
 #### The p-value monster 
@@ -158,4 +187,4 @@ Q4. What is p-hacking?
 List some extra interesting resources 
 
 ###############
-Below list three questiosn/comments you have for discussion in the first class based on what you have done above and the readings. Atleast two of the questions should be conceptual. If you have any syntax/code based doubts, do NOT include them here - ask on Slack. The questions you list here will be voted on along with questions from others and we will be disucssing the most popular questions.  
+Below list three questions/comments you have for discussion in the first class based on what you have done above and the readings. At least two of the questions should be conceptual. If you have any syntax/code based doubts, do NOT include them here - ask on Slack. The questions you list here will be voted on along with questions from others and we will be discussing the most popular questions.  
