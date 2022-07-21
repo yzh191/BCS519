@@ -98,24 +98,26 @@ legend("topright", c("Dogs", "Cats"), col=c("blue", "Orange"), lwd=5)
 Read the following article on NHST: 
 [Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
 
-Q1. Insert a code chunk, calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
-
+1. Insert a code chunk, calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
+```{r}
+# Calculate mean and std
+```
 ||Mean|Standard Deviation|
 |:---:|:---:|:---:|
 | Dog |     |     |
 | Cat |     |     |
 
-Q2. We would like to compare the size of dogs with the size of cats. List out the hypotheses: <br>
-  * Null Hypothesis: <br>
-  * Alternate Hypothesis: <br>
+2. We would like to compare the size of dogs with the size of cats. List out the hypotheses: 
+- Null Hypothesis: <\br>
+- Alternate Hypothesis: <\br>
 
-Q3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
+3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
 
-#### T-test <br>
-Types: <br>
-* One Sample t-test <br>
-* Independent Two Sample t-test <br>
-* Paired Two Sample t-test <br>
+#### T-test 
+Types: 
+* One Sample t-test 
+* Independent Two Sample t-test 
+* Paired Two Sample t-test 
 
 We are using: INDEPENDENT TWO SAMPLE T-TEST
 ![T-test Formula](TTtest.png)
@@ -136,8 +138,8 @@ Well, you can either be a cat or a dog...
 Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
 
 2. Normality 
-For N >= 100, Shapiro-Wilk test for normality <br>
-Or visually, a Q-Q plot <br>
+For N >= 100, Shapiro-Wilk test for normality
+Or visually, a Q-Q plot
 Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
 
 Insert resource for other kinds of tests?
@@ -151,9 +153,9 @@ What to do if your data isn't normally distributed? <br>
 - Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/) <br>
 
 
-3. Homogeneity - eqaulity of variances <br>
+3. Homogeneity - equality of variances <br>
 Levene's Test of Equality of Variance - gives you a F statistic <br>
-We want our p-value to be > 0.05! - Our variances should NOT be statistically significanlty different. <br> 
+We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different. <br> 
 ```{r}
 
 ```
