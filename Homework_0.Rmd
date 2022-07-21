@@ -59,14 +59,14 @@ cat_sample = rnorm(100,cat_mu,cat_sigma)
 
 #random R tip #1: to view any variable, highlight it and Cmd+enter/Ctrl+enter 
 
-#summarizing our data  
-dog_mean <- mean(dog_sample)
-dog_sd <- sd(dog_sample)
-
-cat_mean <- mean(cat_sample)
-cat_sd <- sd(cat_sample)
 ```
-#### Visualizing data 
+
+### Performing Null Hypothesis Signifiance Testing (NHST) 
+From now on, we will pretend that we do not know the true underlying population distribution. Read the following article on NHST: 
+[Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
+
+1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
+
 ```{r}
 #visualizing data 
 hist_dog <- hist(dog_sample,
@@ -94,65 +94,45 @@ legend("topright", c("Dogs", "Cats"), col=c("blue", "Orange"), lwd=5)
 
 ```
 
-### Null Hypothesis Signifiance Testing (NHST) 
-Read the following article on NHST: 
-[Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
-
-1. Insert a code chunk, calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
 ```{r}
-# Calculate mean and std
+#summarizing our data  
+dog_mean <- mean(dog_sample)
+dog_sd <- sd(dog_sample)
+
+cat_mean <- mean(cat_sample)
+cat_sd <- sd(cat_sample)
 ```
-||Mean|Standard Deviation|
-|:---:|:---:|:---:|
-| Dog |     |     |
-| Cat |     |     |
+    ||Mean|Standard Deviation|
+    |:---:|:---:|:---:|
+    | Dog |<\br>|<\br>|
+    | Cat |<\br>|<\br>|
 
-2. We would like to compare the size of dogs with the size of cats. List out the hypotheses: 
-- Null Hypothesis: <\br>
-- Alternate Hypothesis: <\br>
+2. **Listing Hypotheses.** We would like to compare the size of dogs with the size of cats. List out the hypotheses: 
+    * Null Hypothesis: <\br>
+    * Alternate Hypothesis: <\br>
+    
+3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](TTtest.png) will be performed to test our hypotheses. There are different types of t-tests can be used depending on the assumptions about the data, including one sample t-test, independent two sample t-test and paired two sample t-test. We are using **independent two sample t-test** because of the following assumptions: 
+    - [x] Independence: Well, you can either be a cat or a dog. Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
+    - [ ] Normality: For N >= 100, Shapiro-Wilk test for normality. Or visually, a Q-Q plot. Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
 
-3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? 
-
-#### T-test 
-Types: 
-* One Sample t-test 
-* Independent Two Sample t-test 
-* Paired Two Sample t-test 
-
-We are using: INDEPENDENT TWO SAMPLE T-TEST
-![T-test Formula](TTtest.png)
-
-##### Assumptions of a t-test
-1. Independence 
-Well, you can either be a cat or a dog...
-Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
-
-2. Normality 
-For N >= 100, Shapiro-Wilk test for normality
-Or visually, a Q-Q plot
-Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
-
-Insert resource for other kinds of tests?
+  Insert resource for other kinds of tests?
 ```{r}
 # Run the Shapiro-Wilk test for normality here 
 ```
-Q4. Report Normality 
+Report Normality 
 
-What to do if your data isn't normally distributed? <br>
-- Transform Data <br>
-- Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/) <br>
-
-
-3. Homogeneity - equality of variances <br>
-Levene's Test of Equality of Variance - gives you a F statistic <br>
-We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different. <br> 
+What to do if your data isn't normally distributed? <\br>
+- Transform Data
+- Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/)
+    - [ ] Homogeneity - equality of variances 
+    Levene's Test of Equality of Variance - gives you a F statistic
+    We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different. 
 ```{r}
 
 ```
-Q5. Report Homogeniety 
-
-What to do if our variances are not equal? <br>
-- Correction via the df - automatically done in the Welch's t-test 
+    Report Homogeniety 
+    What to do if our variances are not equal? <br>
+    - Correction via the df - automatically done in the Welch's t-test 
 
 [Welch's t-test]()
 ```{r}
@@ -164,14 +144,16 @@ t.test(dog_sample,cat_sample,var.equal = FALSE)
 ```
 
 
-Q6. Based on the results of testing the assumptions, what t-test should we do? 
+4. **Performing Statistical Testing.** Based on the results of testing the assumptions, what t-test should we do? 
 Do it here and report the results - [APA style!](https://www.socscistatistics.com/tutorials/ttest/default.aspx)
 
 ```{r}
 #t-test
 ```
 
-### Reporting Resuls and Statical Inferences  
+
+
+5. **Reporting Results and Statistical Inferences.** 
 
 Before jumping to conclusions based on the results of these tests, it is our responsibility to understand what the p-value, confidence intervals and other metrics seen as the output of the t-test really mean and how we can draw conclusions and influences based on them. 
 
@@ -211,9 +193,11 @@ The goal of this course is get both an implementation and conceptual understandi
 Am I using the correct analysis for my data? <br>
 Are the conclusions and inferences I am drawing from my analysis valid? <br>
 
+3. How do you think changing the Null Hypothesis affects the tests conducted, reported results and inferences? (This can be moved to the bottom as a more conceptual question)
+
 ## Questions and Comments 
 Below list three questions/comments you have for discussion in the first class based on what you have done above and the readings. At least two of the questions should be conceptual. If you have any syntax/code based doubts, do NOT include them here - ask on Slack. The questions you list here will be voted on along with questions from others and we will be discussing the most popular questions.  
 
-1. <br>
-2. <br>
-3. <br> 
+1. <\br>
+2. <\br>
+3. <\br> 
