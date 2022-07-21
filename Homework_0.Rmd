@@ -122,16 +122,6 @@ Types:
 We are using: INDEPENDENT TWO SAMPLE T-TEST
 ![T-test Formula](TTtest.png)
 
-[Welch's t-test]()
-```{r}
-#The Independent two sample t-test 
-t.test(dog_sample,cat_sample,var.equal = TRUE)
-
-#The Welch's t-test
-t.test(dog_sample,cat_sample,var.equal = FALSE)
-```
-
-
 ##### Assumptions of a t-test
 1. Independence 
 Well, you can either be a cat or a dog...
@@ -163,6 +153,15 @@ Q5. Report Homogeniety
 
 What to do if our variances are not equal? <br>
 - Correction via the df - automatically done in the Welch's t-test 
+
+[Welch's t-test]()
+```{r}
+#The Independent two sample t-test 
+t.test(dog_sample,cat_sample,var.equal = TRUE)
+
+#The Welch's t-test
+t.test(dog_sample,cat_sample,var.equal = FALSE)
+```
 
 
 Q6. Based on the results of testing the assumptions, what t-test should we do? 
