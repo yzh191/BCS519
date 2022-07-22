@@ -117,7 +117,9 @@ cat_sd <- sd(cat_sample)
 3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](images\TTtest.png) will be performed to test our hypotheses. There are different types of t-tests - one sample t-test, independent two sample t-test and paired two sample t-test. We are using **independent two sample t-test** because of the nature of our data. Our two samples draw values from *TWO* *INDEPENDENT* samples. 
 But before we actually run the test, we have to make sure the following assumptions of the independent two sample t-test are met: 
     - [x] Independence: Well, you can either be a cat or a dog. Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
-    - [ ] Normality: visually, a Q-Q plot and for N >= 100, Shapiro-Wilk test for normality. Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
+    - [ ] Normality: visually, a Q-Q plot helps check for normality - like in the following [examples](https://sherrytowers.com/2013/08/29/aml-610-fall-2013-module-ii-review-of-probability-distributions/qqplot_examples/) ![Examples of Q-Q plots](images\qqplot_examples.jpg)
+
+And for N >= 100, Shapiro-Wilk test for normality. Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
 
 ```{r}
 # Visualize normality with a Q-Q plot 
