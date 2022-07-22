@@ -207,7 +207,7 @@ Re-write your report of the t-test results but this time include the confidence 
 
 #### Statistical Inferences 
 
-To be filled... 
+Segways into Simulations......
 
 
 The goal of this course is get both an implementation and conceptual understanding of the statistical methods commonly used in Brain and Cognitive Sciences. The two main questions we should be able to answer for ourselves at the end are: <br>
