@@ -36,6 +36,7 @@ Post any syntax or code related doubts on slack as soon as you encounter them so
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(car)
 ```
 
 ## Resources on R and Rmd
@@ -143,7 +144,12 @@ But as mentioned above, the t-test is robust to some deviation from normality. I
     Levene's Test of Equality of Variance - gives you a F statistic
      
 ```{r}
+#because Levene's test was written for data frames, we will have to wrangle our two vectors into a data frame to get in the required format before running Levene's test 
+data_frame <- as.data.frame(cbind(dog_sample, cat_sample))
+data_frame <- pivot_longer(data_frame, everything(), names_to = "variable", values_to = "value")
+leveneTest(value ~ variable, data_frame)
 
+#NOTE: a lot of the plots and other tests we ran above can be redone in a more efficient and elegant way with our data_frame. Give it a try! 
 ```
     Report Homogeneity 
     We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different.
