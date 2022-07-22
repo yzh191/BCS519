@@ -43,6 +43,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
 
+RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to help you get started with R if you are new to it. It is also recommended that you go through the Chapters 2-5 of the textbook to get more practice with data visualization and wrangling in R. These [cheatsheets](https://rstudio.cloud/learn/cheat-sheets) will also come in handy during out lab sessions as we familiarize ourselves with R. 
+
 
 ## Simulation and NHST
 ### Simulating Data <a name="data"></a>
@@ -111,30 +113,43 @@ cat_sd <- sd(cat_sample)
     * Null Hypothesis: <\br>
     * Alternate Hypothesis: <\br>
     
-3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](TTtest.png) will be performed to test our hypotheses. There are different types of t-tests can be used depending on the assumptions about the data, including one sample t-test, independent two sample t-test and paired two sample t-test. We are using **independent two sample t-test** because of the following assumptions: 
+3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](images\TTtest.png) will be performed to test our hypotheses. There are different types of t-tests - one sample t-test, independent two sample t-test and paired two sample t-test. We are using **independent two sample t-test** because of the nature of our data. Our two samples draw values from *TWO* *INDEPENDENT* samples. 
+But before we actually run the test, we have to make sure the following assumptions of the independent two sample t-test are met: 
     - [x] Independence: Well, you can either be a cat or a dog. Unless you're Muffin the dog-cat or Pico the cat-dog but let's assume that all our cats are only cats and all our dogs are only dogs. 
-    - [ ] Normality: For N >= 100, Shapiro-Wilk test for normality. Or visually, a Q-Q plot. Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
+    - [ ] Normality: visually, a Q-Q plot and for N >= 100, Shapiro-Wilk test for normality. Keep in mind: ["The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php)
 
-  Insert resource for other kinds of tests?
 ```{r}
-# Run the Shapiro-Wilk test for normality here 
+# Visualize normality with a Q-Q plot 
+data_frame(val = dog_sample) %>%
+          ggplot(., aes(sample = val)) + 
+                geom_qq_line() + 
+                geom_qq()
+data_frame(val = cat_sample) %>%
+          ggplot(., aes(sample = val)) + 
+                geom_qq_line() + 
+                geom_qq()
+
+#Running the Shapiro-Wilk test for normality
+shapiro.test(dog_sample)
+shapiro.test(cat_sample)
 ```
-Report Normality 
+Report Normality - REMEMBER a p > .05 from the Shapiro-Wilk test means that our data are NOT significantly different from a normal distribution. 
 
 What to do if your data isn't normally distributed? <\br>
 - Transform Data
-- Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/)
+- Use the non-parametric [Mann-Whitney U Test](https://www.statisticssolutions.com/free-resources/directory-of-statistical-analyses/mann-whitney-u-test/) 
+But as mentioned above, the t-test is robust to some deviation from normality. It is up to you us as researchers to decide how much deviation is acceptable.  
     - [ ] Homogeneity - equality of variances 
     Levene's Test of Equality of Variance - gives you a F statistic
-    We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different. 
+     
 ```{r}
 
 ```
-    Report Homogeniety 
+    Report Homogeneity 
+    We want our p-value to be > 0.05! - Our variances should NOT be statistically significantly different.
     What to do if our variances are not equal? <br>
-    - Correction via the df - automatically done in the Welch's t-test 
+    - Correction via the df - automatically done in the Welch's t-test by simply setting the var.equal parameter to FALSE in the t.test() function. 
 
-[Welch's t-test]()
 ```{r}
 #The Independent two sample t-test 
 t.test(dog_sample,cat_sample,var.equal = TRUE)
@@ -168,7 +183,7 @@ Q7. Explain what a p-value is in your own words.
 Would you report a result as statistically significant is your p-value was 0.051? What about if it was 0.049? 
 
 The next big issue: [p-hacking](https://www.youtube.com/watch?v=HDCOUXE3HMM)  
-![p-hacking](phack.png)
+![p-hacking](images\phack.png)
 
 Try your hand at some [p-hacking](https://projects.fivethirtyeight.com/p-hacking/)
 One thing we can do to overcome this is practice [pre-registration](https://www.cos.io/initiatives/prereg) 
