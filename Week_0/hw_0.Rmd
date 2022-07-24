@@ -1,7 +1,7 @@
 ---
 title: "Homework 0"
 author: "Oviya Mohan & Yue Zhang"
-date: "7/19/2022"
+date: "8/15/2022"
 output:
   html_document:
     df_print: paged
@@ -23,7 +23,7 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ## Introduction 
 The purpose of this homework is to set the stage for our stats course by introducing R and R Markdown (Rmd) and basic concepts in statistical analysis that may seem familiar from most of the introductory statistics courses. There are both **conceptual questions** and **code chunks** for you to answer and fill out. Extra resources on each concept are scattered throughout this homework to help guide through each question. Please take some time to explore them. When coming across other resources that are useful, feel free to drop a message on slack and share them! Trying out extra visualizations and tests are highly encouraged. To get the conversation started, you will also be asked to list out questions you have at the end of this document. 
 
-Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by **11:59 pm** on **Aug 21, 2022**. Make sure it knits without errors before submission. You are welcome to edit the author and date on top of this document. When encountering any syntax or code related doubts, do not hesitate to post them on Slack and we can work them out together. It is likely that other people are encountering the same ones. If you have any questions, comments or suggestions, feel free to reach out to us. 
+Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by **11:59 pm** on **Aug 21, 2022**. Make sure it knits without errors before submission. A good way to check whether you have filled out all the blanks is by looking for all the <\br>s and make sure they have been replaced with the appropriate answers. You are welcome to edit the author and date on top of this document. When encountering any syntax or code related doubts, do not hesitate to post them on Slack and we can work them out together. It is likely that other people are encountering the same ones. If you have any questions, comments or suggestions, feel free to reach out to us. 
 
 ```{r, include = FALSE}
 # Installing and loading libraries 
