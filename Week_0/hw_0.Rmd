@@ -108,7 +108,9 @@ cat_sd <- sd(cat_sample)
     * Null Hypothesis: <\br>
     * Alternate Hypothesis: <\br>
     
-3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](images\ttest.png) will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples. But before we actually run the test, we have to make sure the three following assumptions of the independent two sample t-test are met. They are independence, normality and homogeneity. 
+3. **Knowing the Assumptions.** In this case, a t-test will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples. ![TFormula](images\ttest.png)
+
+But before we actually run the test, we have to make sure the three following assumptions of the independent two sample t-test are met. They are independence, normality and homogeneity. 
     
   - *Independence.*<a name="independence"></a> Whether we can assume the dog and the cat samples are from unrelated groups. Well, you can either be a cat or a dog. Unless you're Muffin the dog-cat or Pico the cat-dog, but let's assume that all our cats are only cats and all our dogs are only dogs. 
   - *Normality.* <a name="normality"></a> Whether we can assume the dog and the cat samples are normally distributed within each group. For n >= 100, Shapiro-Wilk test for normality[^1]. 
@@ -145,7 +147,7 @@ Please check the corresponding boxes (replace <\br> with x) if the assumption is
 ```{r}
 # Perform t-test here
 t.test(dog_sample,cat_sample,var.equal = TRUE) #The Independent two sample t-test 
-t.test(dog_sample,cat_sample,var.equal = FALSE) #The Welch's t-test for nonhomogeneity
+t.test(dog_sample,cat_sample,var.equal = FALSE) #The Welch's t-test for non homogeneity
 ```
 
 
@@ -166,8 +168,10 @@ Before jumping to conclusions based on the results of these tests, it is our res
 ## The Bigger Picture
 In this course, we aim to learn more about the application of statistical methods as a tool to make inferences about our data as well as conceptual understanding of these methods commonly used in Brain and Cognitive Sciences. The main questions we want to be able to answer for ourselves at the end are:
 
-1. Given my data set and hypotheses, which set of statistical tests would be the most appropriate?
-2. <\br>
+1. Is my hypothesis accurate and meaningful? 
+2. Given my data set and hypotheses, which set of statistical tests would be the most appropriate?
+3. Are the inferences I am drawing from the results of the statistical tests accurate? 
+4. List any other goal you have for the course here <\br> 
 
 ## Questions and Comments 
 Below list three questions/comments you have based on the exercise above and the readings listed in the document. At least two of the questions should be conceptual. These questions will be up-voted along with questions from others and we will discuss the most popular questions during our first meeting. Any syntax/code based doubts can be posted on Slack instead.  
