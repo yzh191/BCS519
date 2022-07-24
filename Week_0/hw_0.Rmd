@@ -1,0 +1,177 @@
+---
+title: "Homework 0"
+author: "Oviya Mohan & Yue Zhang"
+date: "7/19/2022"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+  word_document:
+    toc: no
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: no
+    toc: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
+## Introduction 
+The purpose of this homework is to set the stage for our stats course by introducing R and R Markdown (Rmd) and basic concepts in statistical analysis that may seem familiar from most of the introductory statistics courses. There are both **conceptual questions** and **code chunks** for you to answer and fill out. Extra resources on each concept are scattered throughout this homework to help guide through each question. Please take some time to explore them. When coming across other resources that are useful, feel free to drop a message on slack and share them! Trying out extra visualizations and tests are highly encouraged. To get the conversation started, you will also be asked to list out questions you have at the end of this document. 
+
+Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by **11:59 pm** on **Aug 21, 2022**. Make sure it knits without errors before submission. You are welcome to edit the author and date on top of this document. When encountering any syntax or code related doubts, do not hesitate to post them on Slack and we can work them out together. It is likely that other people are encountering the same ones. If you have any questions, comments or suggestions, feel free to reach out to us. 
+
+```{r, include = FALSE}
+# Installing and loading libraries 
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(car)
+```
+
+## Resources on R and Rmd
+This is an [R Markdown](http://rmarkdown.rstudio.com) document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. When clicking the **Knit** button, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get started with R if you are new to it. It is also recommended to go through the Chapters 2-5 of the [textbook](https://psych252.github.io/psych252book/) to get more practice with data visualization and wrangling in R. These [cheatsheets](https://rstudio.cloud/learn/cheat-sheets) will come in handy during lab sessions as we familiarize ourselves with R. 
+
+
+## Simulation and NHST
+### Simulating Data <a name="data"></a>
+
+```{r}
+#nothing is ever truly random when "randomly" generated on a computer - always pseudo random
+#set.seed(124) #can be used to get the same "random" sample consistently 
+dog_mu = 20
+dog_sigma = 5
+dog_sample = rnorm(100,dog_mu,dog_sigma)
+cat_mu = 15
+cat_sigma = 2
+cat_sample = rnorm(100,cat_mu,cat_sigma)
+
+#random R tip #1: to view any variable, highlight it and Cmd+enter/Ctrl+enter 
+```
+
+### Performing Null Hypothesis Signifiance Testing (NHST) 
+From now on,  pretend that you do not know the true underlying population distribution. Read the following article on NHST: 
+[Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
+
+1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
+```{r}
+# create histogram of dog size
+hist_dog <- hist(dog_sample,
+main="Distribution of Dog Sizes",
+xlab="Size",
+col="blue",
+alpha = 0.6, 
+freq=FALSE,
+breaks = 20,
+plot = FALSE
+)
+# create histogram of cat size
+hist_cat <- hist(cat_sample,
+main="Distribution of Cat Sizes",
+xlab="Size",
+col="orange",
+alpha = 0.4, 
+freq=FALSE,
+breaks = 20,
+plot = FALSE
+)
+
+# plot two distributions together
+plot(hist_dog, col = "blue", xlab = "Size (lb)", main = "Distribution of Dog and Cat Sizes")
+plot(hist_cat, col = "orange", add = TRUE)
+
+#try other ways to visualize the data here 
+# <\br>
+
+```
+
+```{r}
+#summarizing our data  
+dog_mean <- mean(dog_sample)
+dog_sd <- sd(dog_sample)
+
+cat_mean <- mean(cat_sample)
+cat_sd <- sd(cat_sample)
+```
+| Pets |Mean|Standard Deviation|
+|:---:|:---:|:---:|
+| Dog |<\br>|<\br>|
+| Cat |<\br>|<\br>|
+
+2. **Listing Hypotheses.** We would like to compare the size of dogs with the size of cats. List out the hypotheses: 
+    * Null Hypothesis: <\br>
+    * Alternate Hypothesis: <\br>
+    
+3. **Knowing the Assumptions.** In this case, a t-test ![TFormula](images\ttest.png) will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples. But before we actually run the test, we have to make sure the three following assumptions of the independent two sample t-test are met. They are independence, normality and homogeneity. 
+    
+  - *Independence.*<a name="independence"></a> Whether we can assume the dog and the cat samples are from unrelated groups. Well, you can either be a cat or a dog. Unless you're Muffin the dog-cat or Pico the cat-dog, but let's assume that all our cats are only cats and all our dogs are only dogs. 
+  - *Normality.* <a name="normality"></a> Whether we can assume the dog and the cat samples are normally distributed within each group. For n >= 100, Shapiro-Wilk test for normality[^1]. 
+  
+>"The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."
+
+```{r}
+#Running the Shapiro-Wilk test for normality
+shapiro.test(dog_sample)
+shapiro.test(cat_sample)
+```
+[^1]: A p-value of greater than 0.05 from the Shapiro-Wilk test means that our data are NOT significantly different from a normal distribution.
+
+  - *Homogeneity.*<a name="homogeneity"></a> Homogeneity meaning the variances of the dog and the cat populations are equal. It can be tested using Levene's Test of Equality of Variance[^2], which gives us a F statistic.
+```{r}
+#because Levene's test was written for data frames, we will have to wrangle our two vectors into a data frame to get in the required format before running Levene's test 
+data_frame <- as.data.frame(cbind(dog_sample, cat_sample))
+data_frame <- pivot_longer(data_frame, everything(), names_to = "variable", values_to = "value")
+leveneTest(value ~ variable, data_frame)
+
+#NOTE: a lot of the plots and other tests we ran above can be redone in a more efficient and elegant way with our data_frame. Give it a try! 
+# <\br>
+```
+[^2]: A p-value greater than 0.05 means that the two variances are NOT statistically different from each other. If the variances are not equal, a correction via degrees of freedom needs to be done, which is automatically done in the Welch's t-test by simply setting the 'var.equal' parameter to 'FALSE' in the 't.test()' function. 
+
+Please check the corresponding boxes (replace <\br> with x) if the assumption is met.
+
+  - [<\br>] [Independence](#independence)
+  - [<\br>] [Normality](#normality)
+  - [<\br>] [Homogeneity](#homogeneity)
+
+
+4. **Performing Statistical Testing.** Based on the results of testing the assumptions, which type of t-test should be used? <\br>
+```{r}
+# Perform t-test here
+t.test(dog_sample,cat_sample,var.equal = TRUE) #The Independent two sample t-test 
+t.test(dog_sample,cat_sample,var.equal = FALSE) #The Welch's t-test for nonhomogeneity
+```
+
+
+### Statistical Inferences 
+Before jumping to conclusions based on the results of these tests, it is our responsibility to understand the p-value, the confidence intervals and other metrics seen as the output of the t-test mean and how we can draw conclusions and influences based on them. 
+
+1. **Reporting T-test Results.** How do we convey the results from the t-test to others? Please report the results here:
+  - [APA style](https://www.socscistatistics.com/tutorials/ttest/default.aspx): <\br>
+  - Explain in your own words what the results mean in relation to our hypotheses: <\br>
+2. **Understanding [P-value](https://www.nature.com/articles/nmeth.2698).**  What does it mean if we get a "statistically significant" results or p < 0.05? Utilize the resources here to get a better understand p-value. For visualization, give [Understanding p-values Through Simulations](https://rpsychologist.com/pvalue/) a shot. 
+  - Explain conceptually what a p-value is in your own words: <\br> 
+  - What does the p-value mean in the context of our data: <\br>
+
+3. **Interpreting Confidence Intervals.** They give us more ... confidence? Read [this](https://s4be.cochrane.org/blog/2018/04/27/confidence-intervals-should-be-reported/) to get an idea of why they should be reported. 
+  - Explain what a confidence interval is in your own words: <\br> 
+  - Modify your report of the t-test results with the confidence interval in [APA style](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf): <\br>
+
+## The Bigger Picture
+In this course, we aim to learn more about the application of statistical methods as a tool to make inferences about our data as well as conceptual understanding of these methods commonly used in Brain and Cognitive Sciences. The main questions we want to be able to answer for ourselves at the end are:
+
+1. Given my data set and hypotheses, which set of statistical tests would be the most appropriate?
+2. <\br>
+
+## Questions and Comments 
+Below list three questions/comments you have based on the exercise above and the readings listed in the document. At least two of the questions should be conceptual. These questions will be up-voted along with questions from others and we will discuss the most popular questions during our first meeting. Any syntax/code based doubts can be posted on Slack instead.  
+
+1. <\br>
+2. <\br>
+3. <\br> 
