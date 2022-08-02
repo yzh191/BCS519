@@ -61,14 +61,30 @@ From now on,  pretend that you do not know the true underlying population distri
 
 1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
 ```{r}
-# create histogram of dog sizes
-# <\br>
-
-# create histogram of cat sizes
-# <\br>
+# create histogram of dog size
+hist_dog <- hist(dog_sample,
+main="Distribution of Dog Sizes",
+xlab="Size",
+col="blue",
+alpha = 0.6, 
+freq=FALSE,
+breaks = 20,
+plot = FALSE
+)
+# create histogram of cat size
+hist_cat <- hist(cat_sample,
+main="Distribution of Cat Sizes",
+xlab="Size",
+col="orange",
+alpha = 0.4, 
+freq=FALSE,
+breaks = 20,
+plot = FALSE
+)
 
 # plot two distributions together
-# <\br>
+plot(hist_dog, col = "blue", xlab = "Size (lb)", main = "Distribution of Dog and Cat Sizes")
+plot(hist_cat, col = "orange", add = TRUE)
 
 #try other ways to visualize the data here 
 # <\br>
@@ -76,8 +92,12 @@ From now on,  pretend that you do not know the true underlying population distri
 ```
 
 ```{r}
-#Summarize data and fill table below 
-# <\br>
+#summarizing our data  
+dog_mean <- mean(dog_sample)
+dog_sd <- sd(dog_sample)
+
+cat_mean <- mean(cat_sample)
+cat_sd <- sd(cat_sample)
 ```
 | Pets |Mean|Standard Deviation|
 |:---:|:---:|:---:|
@@ -98,8 +118,9 @@ But before we actually run the test, we have to make sure the three following as
 >"The t-test is described as a robust test with respect to the assumption of normality. This means that some deviation away from normality does not have a large influence on Type I error rates. The exception to this is if the ratio of the smallest to largest group size is greater than 1.5 (largest compared to smallest)."
 
 ```{r}
-#Run the Shapiro-Wilk test for normality
-# <\br>
+#Running the Shapiro-Wilk test for normality
+shapiro.test(dog_sample)
+shapiro.test(cat_sample)
 ```
 [^1]: A p-value of greater than 0.05 from the Shapiro-Wilk test means that our data are NOT significantly different from a normal distribution.
 
@@ -108,10 +129,9 @@ But before we actually run the test, we have to make sure the three following as
 #because Levene's test was written for data frames, we will have to wrangle our two vectors into a data frame to get in the required format before running Levene's test 
 data_frame <- as.data.frame(cbind(dog_sample, cat_sample))
 data_frame <- pivot_longer(data_frame, everything(), names_to = "variable", values_to = "value")
-#Run Levene's test 
-# <\br>
+leveneTest(value ~ variable, data_frame)
 
-#NOTE: The plots and other tests we ran above can be redone in a more efficient and elegant way with our data_frame. Give it a try! 
+#NOTE: a lot of the plots and other tests we ran above can be redone in a more efficient and elegant way with our data_frame. Give it a try! 
 # <\br>
 ```
 [^2]: A p-value greater than 0.05 means that the two variances are NOT statistically different from each other. If the variances are not equal, a correction via degrees of freedom needs to be done, which is automatically done in the Welch's t-test by simply setting the 'var.equal' parameter to 'FALSE' in the 't.test()' function. 
@@ -126,7 +146,8 @@ Please check the corresponding boxes (replace <\br> with x) if the assumption is
 4. **Performing Statistical Testing.** Based on the results of testing the assumptions, which type of t-test should be used? <\br>
 ```{r}
 # Perform t-test here
-# <\br>
+t.test(dog_sample,cat_sample,var.equal = TRUE) #The Independent two sample t-test 
+t.test(dog_sample,cat_sample,var.equal = FALSE) #The Welch's t-test for non homogeneity
 ```
 
 
