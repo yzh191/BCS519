@@ -40,7 +40,7 @@ RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get st
 
 To get help on any command in R, type "?command" or "help(command)" into the console. You can also use "help.search("keyword") if you're trying to find a command but don't know how it's called. E.g., try "help.search("printing"). In RStudio, you can also use the search function in the Help panel (by default in the bottom right of the screen). It allows you to search across topics and within help pages. 
 
-It usually takes some time to get used to how R (or any other program) describes help. So, we encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
+We encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
 
 When you post questions on Slack, we can best help each other if you include the following (if applicable):
 
@@ -99,7 +99,7 @@ From now on,  pretend that you do not know the true underlying population distri
     * Null Hypothesis: <\br>
     * Alternate Hypothesis: <\br>
     
-3. **Knowing the Assumptions.** In this case, a t-test will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples. ![TFormula](images\ttest.png)
+3. **Knowing the Assumptions.** In this case, a t-test will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples.
 
 But before we actually run the test, we have to make sure the three following assumptions of the independent two sample t-test are met. They are independence, normality and homogeneity. 
     
@@ -155,7 +155,11 @@ Before jumping to conclusions based on the results of these tests, it is our res
 
 For an interactive visualization, give [Understanding p-values Through Simulations](https://rpsychologist.com/pvalue/) a shot. 
 
-For our example above, we can try a similar simulation based approach to understanding p-values. We will generate and test the data a 1000 times and visualize the p-values obtained: 
+3. **Interpreting Confidence Intervals.** They give us more ... confidence? Read [this](https://s4be.cochrane.org/blog/2018/04/27/confidence-intervals-should-be-reported/) to get an idea of why they should be reported. 
+  - Explain what a confidence interval is in your own words: <\br> 
+  - Modify your report of the t-test results with the confidence interval in [APA style](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf): <\br>
+
+4. **Simulation-based Approach.** As an primer for our week 1 Simulation, we can try a simulation-based approach to understanding p-values, by sampling from the population distribution 1000 times and visualizing the p-values obtained. 
 
 ```{r}
 dog_mu = 20
@@ -175,7 +179,6 @@ for (x in 1:1000) {
 }
 
 #plot histogram of p-values
-
 hist_p <- hist(p_values,
 main="Distribution of p-values",
 xlab="p-value",
@@ -188,16 +191,14 @@ plot = FALSE
 )
 plot(hist_p, col = "blue")
 
-## Try playing around with the mu and sigma values will give you an idea of what happens to the distribution of p-value as the true means get closer 
-
 ```
-  - What do you expect to see (in the distribution of 1000 p-values) when the means and SDs of the cats and dogs are the same? Make the appropriate changes in the above code chunk and write down a description of what you see and it means: <\br> 
   
-We will go into detail about more simulation based approaches next week! 
+What do you expect to see (in the distribution of 1000 p-values) when the means and SDs of the cats and dogs are the same? Make corresponding changes to the code above. 
+```{r}
+## put modified code here <\br>
+```
 
-3. **Interpreting Confidence Intervals.** They give us more ... confidence? Read [this](https://s4be.cochrane.org/blog/2018/04/27/confidence-intervals-should-be-reported/) to get an idea of why they should be reported. 
-  - Explain what a confidence interval is in your own words: <\br> 
-  - Modify your report of the t-test results with the confidence interval in [APA style](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf): <\br>
+What do you see from the results above and what does it mean: <\br> 
 
 ## The Bigger Picture
 In this course, we aim to learn more about the application of statistical methods as a tool to make inferences about our data as well as conceptual understanding of these methods commonly used in Brain and Cognitive Sciences. The main questions we want to be able to answer for ourselves at the end are:

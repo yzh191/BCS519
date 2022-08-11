@@ -34,16 +34,27 @@ library(car)
 ```
 
 ## Resources on R and Rmd
-This is an [R Markdown](http://rmarkdown.rstudio.com) document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. When clicking the **Knit** button, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+This is an [R Markdown](http://rmarkdown.rstudio.com) document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. When clicking the **Knit** button, a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
 
-RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get started with R if you are new to it. It is also recommended to go through the Chapters 2-5 of the [textbook](https://psych252.github.io/psych252book/) to get more practice with data visualization and wrangling in R. These [cheatsheets](https://rstudio.cloud/learn/cheat-sheets) will come in handy during lab sessions as we familiarize ourselves with R. 
+RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get started with R if you are new to it. It is also recommended to go through the Chapters 2-5 of the [textbook](https://psych252.github.io/psych252book/) to get more practice with data visualization and wrangling in R. These [cheatsheets](https://rstudio.cloud/learn/cheat-sheets) will come in handy during lab sessions as we familiarize ourselves with R. If you’re new to R markdown, read through the [R markdown tutorial](https://ourcodingclub.github.io/tutorials/rmarkdown/) up to (but not including) the section “Common problems when compiling a .pdf”.
 
+To get help on any command in R, type "?command" or "help(command)" into the console. You can also use "help.search("keyword") if you're trying to find a command but don't know how it's called. E.g., try "help.search("printing"). In RStudio, you can also use the search function in the Help panel (by default in the bottom right of the screen). It allows you to search across topics and within help pages. 
 
-## Simulation and NHST
-### Simulating Data <a name="data"></a>
+We encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
+
+When you post questions on Slack, we can best help each other if you include the following (if applicable):
+
+ * *What was your goal?* A brief informal description of what you were aiming to do.
+ * *What did you do?* The relevant code chunk and some preceding code context that you use.
+ * *What happened?* The error message, warning, and/or output that resulted from that code (possibly with a description of how it's different from what you were aiming for).
+
+Thank you.
+
+## NHST
+### Generating Data <a name="data"></a>
 
 ```{r}
-#nothing is ever truly random when "randomly" generated on a computer - always pseudo random
+#nothing is ever truly random when "randomly" generated - always pseudo random
 #set.seed(124) #can be used to get the same "random" sample consistently 
 dog_mu = 20
 dog_sigma = 5
@@ -59,7 +70,7 @@ cat_sample = rnorm(100,cat_mu,cat_sigma)
 From now on,  pretend that you do not know the true underlying population distribution. Read the following article on NHST: 
 [Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
 
-1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the simulated [sample data](#data)
+1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the generated [sample data](#data)
 ```{r}
 # create histogram of dog size
 hist_dog <- hist(dog_sample,
@@ -108,7 +119,7 @@ cat_sd <- sd(cat_sample)
     * Null Hypothesis: <\br>
     * Alternate Hypothesis: <\br>
     
-3. **Knowing the Assumptions.** In this case, a t-test will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples. ![TFormula](images\ttest.png)
+3. **Knowing the Assumptions.** In this case, a t-test will be performed to test our hypotheses. There are different types of t-tests: one sample t-test, independent two sample t-test and paired two sample t-test. We are using [**independent two sample t-test**](https://statistics.laerd.com/statistical-guides/independent-t-test-statistical-guide.php), also know as the unpaired t-test, because our two samples draw values from *TWO INDEPENDENT* samples.
 
 But before we actually run the test, we have to make sure the three following assumptions of the independent two sample t-test are met. They are independence, normality and homogeneity. 
     
@@ -122,6 +133,7 @@ But before we actually run the test, we have to make sure the three following as
 shapiro.test(dog_sample)
 shapiro.test(cat_sample)
 ```
+
 [^1]: A p-value of greater than 0.05 from the Shapiro-Wilk test means that our data are NOT significantly different from a normal distribution.
 
   - *Homogeneity.*<a name="homogeneity"></a> Homogeneity meaning the variances of the dog and the cat populations are equal. It can be tested using Levene's Test of Equality of Variance[^2], which gives us a F statistic.
@@ -152,18 +164,63 @@ t.test(dog_sample,cat_sample,var.equal = FALSE) #The Welch's t-test for non homo
 
 
 ### Statistical Inferences 
-Before jumping to conclusions based on the results of these tests, it is our responsibility to understand the p-value, the confidence intervals and other metrics seen as the output of the t-test mean and how we can draw conclusions and influences based on them. 
+Before jumping to conclusions based on the results of these tests, it is our responsibility to understand the p-value, the confidence intervals and other metrics seen as the output of the t-test mean and how we can draw conclusions and inferences based on them. 
 
 1. **Reporting T-test Results.** How do we convey the results from the t-test to others? Please report the results here:
   - [APA style](https://www.socscistatistics.com/tutorials/ttest/default.aspx): <\br>
   - Explain in your own words what the results mean in relation to our hypotheses: <\br>
-2. **Understanding [P-value](https://www.nature.com/articles/nmeth.2698).**  What does it mean if we get a "statistically significant" results or p < 0.05? Utilize the resources here to get a better understand p-value. For visualization, give [Understanding p-values Through Simulations](https://rpsychologist.com/pvalue/) a shot. 
-  - Explain conceptually what a p-value is in your own words: <\br> 
-  - What does the p-value mean in the context of our data: <\br>
+  
+2. **Understanding [P-value](https://www.nature.com/articles/nmeth.2698).**  What does it mean if we get a "statistically significant" results or p < 0.05? Utilize the resources here to get a better understand p-value.  
+
+ - Explain conceptually what a p-value is in your own words: <\br> 
+ - What does the p-value imply in the context of our data: <\br>
+
+For an interactive visualization, give [Understanding p-values Through Simulations](https://rpsychologist.com/pvalue/) a shot. 
 
 3. **Interpreting Confidence Intervals.** They give us more ... confidence? Read [this](https://s4be.cochrane.org/blog/2018/04/27/confidence-intervals-should-be-reported/) to get an idea of why they should be reported. 
   - Explain what a confidence interval is in your own words: <\br> 
   - Modify your report of the t-test results with the confidence interval in [APA style](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf): <\br>
+
+4. **Simulation-based Approach.** As an primer for our week 1 Simulation, we can try a simulation-based approach to understanding p-values, by sampling from the population distribution 1000 times and visualizing the p-values obtained. 
+
+```{r}
+dog_mu = 20
+dog_sigma = 5
+cat_mu = 18
+cat_sigma = 3
+
+p_values <- c()
+
+#generate data and run t-test and obtain p-value a 1000 times 
+for (x in 1:1000) {
+  dog_sample = rnorm(100,dog_mu,dog_sigma)
+  cat_sample = rnorm(100,cat_mu,cat_sigma)
+  #running the Welch's test - more robust in case there is a violation of the homogeneity assumption 
+  p_value <- t.test(dog_sample,cat_sample,var.equal = FALSE)$p.value
+  p_values <-c(p_values, p_value)
+}
+
+#plot histogram of p-values
+hist_p <- hist(p_values,
+main="Distribution of p-values",
+xlab="p-value",
+ylab = "freq",
+col="orange",
+alpha = 0.4, 
+freq=FALSE,
+breaks = 20,
+plot = FALSE
+)
+plot(hist_p, col = "blue")
+
+```
+  
+What do you expect to see (in the distribution of 1000 p-values) when the means and SDs of the cats and dogs are the same? Make corresponding changes to the code above. 
+```{r}
+## put modified code here <\br>
+```
+
+What do you see from the results above and what does it mean: <\br> 
 
 ## The Bigger Picture
 In this course, we aim to learn more about the application of statistical methods as a tool to make inferences about our data as well as conceptual understanding of these methods commonly used in Brain and Cognitive Sciences. The main questions we want to be able to answer for ourselves at the end are:
