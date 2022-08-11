@@ -40,7 +40,7 @@ RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get st
 
 To get help on any command in R, type "?command" or "help(command)" into the console. You can also use "help.search("keyword") if you're trying to find a command but don't know how it's called. E.g., try "help.search("printing"). In RStudio, you can also use the search function in the Help panel (by default in the bottom right of the screen). It allows you to search across topics and within help pages. 
 
-It usually takes some time to get used to how R (or any other program) describes help. So, we encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learnign R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
+It usually takes some time to get used to how R (or any other program) describes help. So, we encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
 
 When you post questions on Slack, we can best help each other if you include the following (if applicable):
 
@@ -54,7 +54,7 @@ Thank you.
 ### Generating Data <a name="data"></a>
 
 ```{r}
-#nothing is ever truly random when "randomly" generated on a computer - always pseudo random
+#nothing is ever truly random when "randomly" generated - always pseudo random
 #set.seed(124) #can be used to get the same "random" sample consistently 
 dog_mu = 20
 dog_sigma = 5
@@ -165,6 +165,7 @@ cat_sigma = 3
 
 p_values <- c()
 
+#generate data and run t-test and obtain p-value a 1000 times 
 for (x in 1:1000) {
   dog_sample = rnorm(100,dog_mu,dog_sigma)
   cat_sample = rnorm(100,cat_mu,cat_sigma)
@@ -172,6 +173,8 @@ for (x in 1:1000) {
   p_value <- t.test(dog_sample,cat_sample,var.equal = FALSE)$p.value
   p_values <-c(p_values, p_value)
 }
+
+#plot histogram of p-values
 
 hist_p <- hist(p_values,
 main="Distribution of p-values",
@@ -183,8 +186,6 @@ freq=FALSE,
 breaks = 20,
 plot = FALSE
 )
-
-# plot two distributions together
 plot(hist_p, col = "blue")
 
 ## Try playing around with the mu and sigma values will give you an idea of what happens to the distribution of p-value as the true means get closer 
