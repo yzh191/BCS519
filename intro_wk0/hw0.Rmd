@@ -70,7 +70,7 @@ cat_sample = rnorm(100,cat_mu,cat_sigma)
 From now on,  pretend that you do not know the true underlying population distribution. Read the following article on NHST: 
 [Null Hypothesis Significance Testing: a short tutorial](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5635437/)
 
-1. **Summarizing Data.** Insert two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the generated [sample data](#data)
+1. **Summarizing Data.** Fill the following two code chunks, 1) to visualize and 2) to calculate and fill out following table on the statistical summary of the generated [sample data](#data)
 ```{r}
 # create histogram of dog sizes
 # <\br>
