@@ -59,8 +59,8 @@ Thank you.
 dog_mu = 20
 dog_sigma = 5
 dog_sample = rnorm(100,dog_mu,dog_sigma)
-cat_mu = 15
-cat_sigma = 2
+cat_mu = 18
+cat_sigma = 3
 cat_sample = rnorm(100,cat_mu,cat_sigma)
 
 #random R tip #1: to view any variable, highlight it and Cmd+enter/Ctrl+enter 
@@ -159,7 +159,7 @@ For an interactive visualization, give [Understanding p-values Through Simulatio
   - Explain what a confidence interval is in your own words: <\br> 
   - Modify your report of the t-test results with the confidence interval in [APA style](https://nursing.ucalgary.ca/sites/default/files/teams/3/ExamplesusingAPAFormat.pdf): <\br>
 
-4. **Simulation-based Approach.** As an primer for our week 1 Simulation, we can try a simulation-based approach to understanding p-values, by sampling from the population distribution 1000 times and visualizing the p-values obtained. 
+4. **Simulation-based Approach.** As an primer for our Week 1 Simulation, we can try a simulation-based approach to understanding p-values, by generating samples from the population distributions 1000 times and visualizing the p-values obtained. 
 
 ```{r}
 dog_mu = 20
@@ -193,12 +193,10 @@ plot(hist_p, col = "blue")
 
 ```
   
-What do you expect to see (in the distribution of 1000 p-values) when the means and SDs of the cats and dogs are the same? Make corresponding changes to the code above. 
-```{r}
-## put modified code here <\br>
-```
+What do you expect to see (in the distribution of 1000 p-values) when the means and SDs of the cats and dogs are the same? : <\br>
 
-What do you see from the results above and what does it mean: <\br> 
+Make corresponding changes to the code chunk above to check your prediction. 
+What do you see and what does it mean: <\br> 
 
 ## The Bigger Picture
 In this course, we aim to learn more about the application of statistical methods as a tool to make inferences about our data as well as conceptual understanding of these methods commonly used in Brain and Cognitive Sciences. The main questions we want to be able to answer for ourselves at the end are:
