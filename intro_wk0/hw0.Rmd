@@ -23,7 +23,15 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ## Introduction 
 The purpose of this homework is to set the stage for our stats course by introducing R and R Markdown (Rmd) and basic concepts in statistical analysis that may seem familiar from most of the introductory statistics courses. There are both **conceptual questions** and **code chunks** for you to answer and fill out. Extra resources on each concept are scattered throughout this homework to help guide through each question. Please take some time to explore them. When coming across other resources that are useful, feel free to drop a message on slack and share them! Trying out extra visualizations and tests are highly encouraged. To get the conversation started, you will also be asked to list out questions you have at the end of this document. 
 
-Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by **11:59 pm** on **Aug 21, 2022**. Make sure it knits without errors before submission. A good way to check whether you have filled out all the blanks is by looking for all the <\br>s and make sure they have been replaced with the appropriate answers. You are welcome to edit the author and date on top of this document. When encountering any syntax or code related doubts, do not hesitate to post them on Slack and we can work them out together. It is likely that other people are encountering the same ones. If you have any questions, comments or suggestions, feel free to reach out to us. 
+Please complete and submit this Rmd by emailing it to either yzh191@u.rochester.edu or omohan@ur.rochester.edu by **11:59 pm** on **Aug 21, 2022**. Make sure it knits without errors before submission. A good way to check whether you have filled out all the blanks is by looking for all the <\br>s and make sure they have been replaced with the appropriate answers. You are welcome to edit the author and date on top of this document. When encountering any doubts and questions on coding, we encourage you to post them on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
+
+When you post questions on Slack, we can best help each other if you include the following (if applicable):
+
+ * *What was your goal?* A brief informal description of what you were aiming to do.
+ * *What did you do?* The relevant code chunk and some preceding code context that you use.
+ * *What happened?* The error message, warning, and/or output that resulted from that code (possibly with a description of how it's different from what you were aiming for).
+
+Thank you.
 
 ```{r, include = FALSE}
 # Installing and loading libraries 
@@ -39,16 +47,6 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) document. Markdown is a si
 RStudio Cloud has great [primers](https://rstudio.cloud/learn/primers) to get started with R if you are new to it. It is also recommended to go through the Chapters 2-5 of the [textbook](https://psych252.github.io/psych252book/) to get more practice with data visualization and wrangling in R. These [cheatsheets](https://rstudio.cloud/learn/cheat-sheets) will come in handy during lab sessions as we familiarize ourselves with R. If you’re new to R markdown, read through the [R markdown tutorial](https://ourcodingclub.github.io/tutorials/rmarkdown/) up to (but not including) the section “Common problems when compiling a .pdf”.
 
 To get help on any command in R, type "?command" or "help(command)" into the console. You can also use "help.search("keyword") if you're trying to find a command but don't know how it's called. E.g., try "help.search("printing"). In RStudio, you can also use the search function in the Help panel (by default in the bottom right of the screen). It allows you to search across topics and within help pages. 
-
-We encourage you to post questions on Slack. Don't waste hours of your time on being stalled. Especially during first few weeks of learning R and R markdown in parallel to learning statistics, we would like to make sure that we minimize any issues that are due to learning a new programming environment. We also encourage all of you to try to answer questions on Slack. If we all just try, we will learn from each other, including from our mistakes. 
-
-When you post questions on Slack, we can best help each other if you include the following (if applicable):
-
- * *What was your goal?* A brief informal description of what you were aiming to do.
- * *What did you do?* The relevant code chunk and some preceding code context that you use.
- * *What happened?* The error message, warning, and/or output that resulted from that code (possibly with a description of how it's different from what you were aiming for).
-
-Thank you.
 
 ## NHST
 ### Generating Data <a name="data"></a>
