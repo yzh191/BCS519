@@ -8,5 +8,76 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#### Load Req. Libraries 
+```{r}
+library("knitr")      # for knitting RMarkdown 
+#library("kableExtra") # for making nice tables
+#library("janitor")    # for cleaning column names
+library("broom")      # for tidying up linear models 
+library("tidyverse")  # for wrangling, plotting, etc. 
+```
 
+## Modelling Data - could be the pre-lab component 
 
+### Simple example with Augmented and Compact Model
+
+## Linear Regression
+
+### Create Sample 
+```{r}
+# make example reproducible 
+set.seed(1)
+
+# set the sample size
+n_samples = 10
+
+# generate correlated data
+df.regression = tibble(chocolate = runif(n_samples, min = 0, max = 100),
+                       happiness = chocolate * 0.5 + rnorm(n_samples, sd = 15))
+
+# plot the data 
+ggplot(data = df.regression,
+       aes(x = chocolate,
+           y = happiness)) +
+  geom_point(size = 3)
+```
+
+### Define and fit the compact model (Model C) 
+
+### Define and fit the augmented model (Model A) 
+
+### Caluclate Sum of Sqaured errors of each model and visulize it 
+
+### Calculate the F statistic to determine whether PRE (Proportion Reduction in Error) is significant 
+
+## Example with Real Data Set 
+
+## Correlation (text book has correlation before regression - could skip in lab, or simply the problem, don't need this level of detail...) 
+```{r}
+# make example reproducible 
+set.seed(1)
+
+n_samples = 20
+
+# create correlated data
+df.correlation = tibble(x = runif(n_samples, min = 0, max = 100),
+                        y = x + rnorm(n_samples, sd = 15))
+
+# plot the data
+ggplot(data = df.correlation,
+       mapping = aes(x = x,
+                     y = y)) + 
+  geom_point(size = 2) +
+  labs(x = "chocolate",
+       y = "happiness")
+```
+
+### Variance 
+
+### Covariance 
+
+Why are they generating a different data set for each of these calculations - does it not make sense to have one data set and calculate all these values for it? 
+
+### Spearman's rank order correlation 
+
+#### Show that Spearman’s ρ is equivalent to Pearson’s r applied to ranked data.
