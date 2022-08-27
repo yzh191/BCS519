@@ -17,7 +17,7 @@ library("broom")      # for tidying up linear models
 library("tidyverse")  # for wrangling, plotting, etc. 
 ```
 
-## Modelling Data - could be the pre-lab component 
+## Load/Generate and Visulize Data 
 
 ### Simple example with Augmented and Compact Model
 
@@ -50,9 +50,12 @@ ggplot(data = df.regression,
 
 ### Calculate the F statistic to determine whether PRE (Proportion Reduction in Error) is significant 
 
-## Example with Real Data Set 
+## Example with Real Data Set - do all steps on own or just this? Don't think we need to do this twice 
 
-## Correlation (text book has correlation before regression - could skip in lab, or simply the problem, don't need this level of detail...) 
+
+
+
+## Correlation (text book has correlation before regression - could skip in lab, or simplfy the problem, don't need this level of detail...) 
 ```{r}
 # make example reproducible 
 set.seed(1)
@@ -80,4 +83,4 @@ Why are they generating a different data set for each of these calculations - do
 
 ### Spearman's rank order correlation 
 
-#### Show that Spearman’s ρ is equivalent to Pearson’s r applied to ranked data.
+#### Show that Spearman’s ρ is equivalent to Pearson’s r applied to ranked data. - maybe include just this if we do go over this in the lecture? 
