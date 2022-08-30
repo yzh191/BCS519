@@ -10,45 +10,182 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 #### Load Req. Libraries 
 ```{r}
+install.packages("janitor")
 library("knitr")      # for knitting RMarkdown 
 #library("kableExtra") # for making nice tables
-#library("janitor")    # for cleaning column names
+library("janitor")    # for cleaning column names
 library("broom")      # for tidying up linear models 
 library("tidyverse")  # for wrangling, plotting, etc. 
 ```
 
+## About the data
+
+DO NOT SHARE OUTSIDE OF THIS CLASS 
+
 ## Load/Generate and Visulize Data 
 
-### Simple example with Augmented and Compact Model
-
-## Linear Regression
-
-### Create Sample 
 ```{r}
-# make example reproducible 
-set.seed(1)
+#load data
+dataframe <- read.csv("msData.csv")  
 
-# set the sample size
-n_samples = 10
-
-# generate correlated data
-df.regression = tibble(chocolate = runif(n_samples, min = 0, max = 100),
-                       happiness = chocolate * 0.5 + rnorm(n_samples, sd = 15))
-
-# plot the data 
-ggplot(data = df.regression,
-       aes(x = chocolate,
-           y = happiness)) +
+#plot data
+ggplot(data = dataframe,
+       aes(x = dist,
+           y = rt)) +
   geom_point(size = 3)
 ```
 
+
 ### Define and fit the compact model (Model C) 
+
+```{r}
+# fit the compact model
+lm.compact = lm(rt ~ 1, data = dataframe)
+
+# store the results of the model fit in a data frame
+df.compact = tidy(lm.compact)
+
+# plot the data with model prediction
+ggplot(data = dataframe,
+       aes(x = dist,
+           y = rt)) +
+  geom_hline(yintercept = df.compact$estimate,
+             color = "blue",
+              size = 1) +
+  geom_point(size = 3) 
+```
+
 
 ### Define and fit the augmented model (Model A) 
 
+```{r}
+# fit the augmented model
+lm.augmented = lm(rt ~ dist, data = dataframe)
+
+# store the results of the model fit in a data frame
+df.augmented = tidy(lm.augmented)
+
+# plot the data with model prediction
+ggplot(data = dataframe,
+       aes(x = dist,
+           y = rt)) +
+  geom_abline(intercept = df.augmented$estimate[1],
+              slope = df.augmented$estimate[2],
+              color = "red",
+              size = 1) +
+  geom_point(size = 3) 
+```
+
+
 ### Caluclate Sum of Sqaured errors of each model and visulize it 
+Residual plots are important for checking whether any of the linear model assumptions have been violated.
+
+Residuals for the Compact Model
+
+```{r}
+# create a data frame that contains the residuals 
+df.compact_model = augment(lm.compact) %>% 
+  clean_names() %>% 
+  left_join(dataframe, by = "rt")
+
+# plot model prediction with residuals
+ggplot(data = df.compact_model,
+       aes(x = dist,
+           y = rt)) +
+  geom_hline(yintercept = df.compact$estimate,
+             color = "blue",
+              size = 1) +
+  geom_segment(aes(xend = dist,
+                   yend = df.compact$estimate),
+               color = "blue") + 
+  geom_point(size = 3) 
+
+# calculate the sum of squared errors
+df.compact_model %>% 
+  summarize(SSE = sum(resid^2))
+```
+Residuals for the Augmented Model
+
+```{r}
+
+# create a data frame that contains the residuals 
+df.augmented_model = augment(lm.augmented) %>% 
+  clean_names() %>% 
+  left_join(dataframe, by = c("rt", "dist"))
+
+# plot model prediction with residuals
+ggplot(data = df.augmented_model,
+       aes(x = dist,
+           y = rt)) +
+  geom_abline(intercept = df.augmented$estimate[1],
+              slope = df.augmented$estimate[2],
+             color = "red",
+              size = 1) +
+  geom_segment(aes(xend = dist,
+                   yend = fitted),
+               color = "red") + 
+  geom_point(size = 3) 
+
+# calculate the sum of squared errors
+df.augmented_model %>% 
+  summarize(SSE = sum(resid^2))
+```
+
+
 
 ### Calculate the F statistic to determine whether PRE (Proportion Reduction in Error) is significant 
+
+```{r}
+pc = 1 # number of parameters in the compact model  
+pa = 2 # number of parameters in the augmented model  
+n = 1051 # number of observations
+
+# SSE of the compact model 
+sse_compact = df.compact_model %>% 
+  summarize(SSE = sum(resid^2))
+
+# SSE of the augmented model
+sse_augmented = df.augmented_model %>% 
+  summarize(SSE = sum(resid^2))
+
+# Proportional reduction of error 
+pre = as.numeric(1 - (sse_augmented/sse_compact))
+
+# F-statistic 
+f = (pre/(pa-pc))/((1-pre)/(n-pa))
+
+# p-value
+p_value = 1-pf(f, df1 = pa-pc, df2 = n-pa)
+
+print(p_value)
+```
+Visualize our F statistic (red line) on F distribution 
+
+```{r}
+ggplot(data = tibble(x = c(0, 10)),
+       mapping = aes(x = x)) +
+  stat_function(fun = "df",
+                args = list(df1 = pa-pc,
+                            df2 = n-pa),
+                size = 1) +
+  geom_vline(xintercept = f,
+             color = "red",
+             size = 1)
+```
+
+## Alternatively, run an ANOVA on our two models 
+
+```{r}
+anova(lm.compact, lm.augmented)
+```
+## And a traditional linear regression 
+
+Essentially just model summary of augmented model - more info: http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/ 
+
+```{r}
+summary(lm.augmented)
+```
+
 
 ## Example with Real Data Set - do all steps on own or just this? Don't think we need to do this twice 
 
