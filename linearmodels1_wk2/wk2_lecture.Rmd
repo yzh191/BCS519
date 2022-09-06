@@ -1,5 +1,8 @@
 ---
 title: "Linear Models 1 (Lecture)"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -51,4 +54,7 @@ ggplot(data = survey,
 
 summary(lm(TimeBed ~ HourPhone, data = survey))
 ```
-
+```{r}
+# pearson correlation
+test <- cor.test(survey$HourPhone, survey$TimeBed)
+```
