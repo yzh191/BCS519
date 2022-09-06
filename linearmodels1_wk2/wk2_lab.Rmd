@@ -178,6 +178,7 @@ ggplot(data = tibble(x = c(0, 10)),
 ```{r}
 anova(lm.compact, lm.augmented)
 ```
+
 ## And a traditional linear regression 
 
 Essentially just model summary of augmented model - more info: http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/ 
@@ -186,13 +187,7 @@ Essentially just model summary of augmented model - more info: http://www.sthda.
 summary(lm.augmented)
 ```
 
-
-## Example with Real Data Set - do all steps on own or just this? Don't think we need to do this twice 
-
-
-
-
-## Correlation (text book has correlation before regression - could skip in lab, or simplfy the problem, don't need this level of detail...) 
+## Correlation?
 ```{r}
 # make example reproducible 
 set.seed(1)
@@ -212,12 +207,5 @@ ggplot(data = df.correlation,
        y = "happiness")
 ```
 
-### Variance 
 
-### Covariance 
 
-Why are they generating a different data set for each of these calculations - does it not make sense to have one data set and calculate all these values for it? 
-
-### Spearman's rank order correlation 
-
-#### Show that Spearman’s ρ is equivalent to Pearson’s r applied to ranked data. - maybe include just this if we do go over this in the lecture? 

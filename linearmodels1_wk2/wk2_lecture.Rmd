@@ -48,5 +48,7 @@ ggplot(data = survey,
               color = "blue") +
   geom_point(size = 3) +
   xlab("Screen Time (hr)") + ylab("Bed Time (time)")
+
+summary(lm(TimeBed ~ HourPhone, data = survey))
 ```
 
