@@ -64,20 +64,14 @@ test <- cor.test(survey$HourPhone, survey$TimeBed)
 ```{r}
 lm.compact <- lm(TimeBed ~ 1, data = survey)
 
-df.compact_model = augment(lm.compact) %>% 
-  clean_names() %>% 
-  left_join(survey, by = "TimeBed")
+df.compact_model = augment(lm.compact)
 
-df.compact_model %>% 
-  summarize(SSE = sum(resid^2))
+SSE_compact = sum(df.compact_model$.resid^2)
 
 lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
 
-df.augmented_model = augment(lm.augmented) %>% 
-  clean_names() %>% 
-  left_join(survey, by = c("TimeBed", "HourPhone"))
+df.augmented_model = augment(lm.augmented)
 
-df.augmented_model %>% 
-  summarize(SSE = sum(resid^2))
+SSE_augmented = sum(df.augmented_model$.resid^2)
 ```
 
