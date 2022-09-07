@@ -58,3 +58,20 @@ summary(lm(TimeBed ~ HourPhone, data = survey))
 # pearson correlation
 test <- cor.test(survey$HourPhone, survey$TimeBed)
 ```
+
+## Residuals 
+
+```{r}
+lm.compact <- lm(TimeBed ~ 1, data = survey)
+
+df.compact_model = augment(lm.compact)
+
+SSE_compact = sum(df.compact_model$.resid^2)
+
+lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
+
+df.augmented_model = augment(lm.augmented)
+
+SSE_augmented = sum(df.augmented_model$.resid^2)
+```
+
