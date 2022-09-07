@@ -2,15 +2,19 @@
 title: "Linear Models I - Week 2"
 author: "Yue Zhang and Oviya Mohan"
 date: "8/25/2022"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-#### Load Req. Libraries 
-```{r}
-install.packages("janitor")
+## Introduction
+
+This dataset looks at the effect of saccade landing errors on the performance of pre-saccadic attention.
+
+## Pre-lab
+```{r,warning=FALSE,message=FALSE}
+# install and attach libraries
+# install.packages("janitor")
 library("knitr")      # for knitting RMarkdown 
 #library("kableExtra") # for making nice tables
 library("janitor")    # for cleaning column names
@@ -18,25 +22,34 @@ library("broom")      # for tidying up linear models
 library("tidyverse")  # for wrangling, plotting, etc. 
 ```
 
-## About the data
+## Step1: Hypotheses
 
-DO NOT SHARE OUTSIDE OF THIS CLASS 
+$H_{0}$ =
 
-## Load/Generate and Visulize Data 
+$H_{1}$ =
+
+## Step2: Visualize data and find correlation
 
 ```{r}
 #load data
-dataframe <- read.csv("msData.csv")  
-
+dataframe <- read.csv("msData.csv") 
 #plot data
 ggplot(data = dataframe,
        aes(x = dist,
            y = rt)) +
-  geom_point(size = 3)
+  geom_point(size = 1)
 ```
 
+```{r}
+# find correlation 
 
-### Define and fit the compact model (Model C) 
+```
+
+## Step3: Fit Models
+
+### Define and fit the compact model (Model C):
+
+$$Y_{i} = \beta_{0} + \epsilon_{i}$$
 
 ```{r}
 # fit the compact model
@@ -50,13 +63,14 @@ ggplot(data = dataframe,
        aes(x = dist,
            y = rt)) +
   geom_hline(yintercept = df.compact$estimate,
-             color = "blue",
+             color = "red",
               size = 1) +
-  geom_point(size = 3) 
+  geom_point(size = 1, shape = 5) 
 ```
 
+### Define and fit the augmented model (Model A):
 
-### Define and fit the augmented model (Model A) 
+$$Y_{i} = \beta_{0} + \beta_{1}X_{i}+ \epsilon_{i}$$
 
 ```{r}
 # fit the augmented model
@@ -71,17 +85,14 @@ ggplot(data = dataframe,
            y = rt)) +
   geom_abline(intercept = df.augmented$estimate[1],
               slope = df.augmented$estimate[2],
-              color = "red",
+              color = "blue",
               size = 1) +
-  geom_point(size = 3) 
+  geom_point(size = 1, shape = 5) 
 ```
 
+## Step4: Compare Models
 
-### Caluclate Sum of Sqaured errors of each model and visulize it 
-Residual plots are important for checking whether any of the linear model assumptions have been violated.
-
-Residuals for the Compact Model
-
+### Caluclate residuals and SSE of Model C
 ```{r}
 # create a data frame that contains the residuals 
 df.compact_model = augment(lm.compact) %>% 
@@ -93,19 +104,19 @@ ggplot(data = df.compact_model,
        aes(x = dist,
            y = rt)) +
   geom_hline(yintercept = df.compact$estimate,
-             color = "blue",
+             color = "red",
               size = 1) +
   geom_segment(aes(xend = dist,
                    yend = df.compact$estimate),
-               color = "blue") + 
-  geom_point(size = 3) 
+               color = "red") + 
+  geom_point(size = 1, shape = 5) 
 
 # calculate the sum of squared errors
 df.compact_model %>% 
   summarize(SSE = sum(resid^2))
 ```
-Residuals for the Augmented Model
 
+### Caluclate residuals and SSE of Model A
 ```{r}
 
 # create a data frame that contains the residuals 
@@ -119,22 +130,19 @@ ggplot(data = df.augmented_model,
            y = rt)) +
   geom_abline(intercept = df.augmented$estimate[1],
               slope = df.augmented$estimate[2],
-             color = "red",
+             color = "blue",
               size = 1) +
   geom_segment(aes(xend = dist,
                    yend = fitted),
-               color = "red") + 
-  geom_point(size = 3) 
+               color = "blue") + 
+  geom_point(size = 1, shape = 5) 
 
 # calculate the sum of squared errors
 df.augmented_model %>% 
   summarize(SSE = sum(resid^2))
 ```
 
-
-
-### Calculate the F statistic to determine whether PRE (Proportion Reduction in Error) is significant 
-
+### Calculate the F statistic to determine whether PRE (Proportion Reduction in Error) is significant
 ```{r}
 pc = 1 # number of parameters in the compact model  
 pa = 2 # number of parameters in the augmented model  
@@ -156,12 +164,9 @@ f = (pre/(pa-pc))/((1-pre)/(n-pa))
 
 # p-value
 p_value = 1-pf(f, df1 = pa-pc, df2 = n-pa)
-
 print(p_value)
-```
-Visualize our F statistic (red line) on F distribution 
 
-```{r}
+# plot f stats on f distribution
 ggplot(data = tibble(x = c(0, 10)),
        mapping = aes(x = x)) +
   stat_function(fun = "df",
@@ -173,39 +178,11 @@ ggplot(data = tibble(x = c(0, 10)),
              size = 1)
 ```
 
-## Alternatively, run an ANOVA on our two models 
-
-```{r}
-anova(lm.compact, lm.augmented)
-```
-
-## And a traditional linear regression 
-
-Essentially just model summary of augmented model - more info: http://www.sthda.com/english/articles/40-regression-analysis/167-simple-linear-regression-in-r/ 
-
+## Step5: Reporting Results
 ```{r}
 summary(lm.augmented)
 ```
-
-## Correlation?
-```{r}
-# make example reproducible 
-set.seed(1)
-
-n_samples = 20
-
-# create correlated data
-df.correlation = tibble(x = runif(n_samples, min = 0, max = 100),
-                        y = x + rnorm(n_samples, sd = 15))
-
-# plot the data
-ggplot(data = df.correlation,
-       mapping = aes(x = x,
-                     y = y)) + 
-  geom_point(size = 2) +
-  labs(x = "chocolate",
-       y = "happiness")
-```
-
+Reporting statistical test results:
+Conclusion: 
 
 
