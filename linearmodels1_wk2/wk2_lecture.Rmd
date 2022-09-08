@@ -1,0 +1,111 @@
+---
+title: "Linear Models 1 (Lecture)"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library("knitr")      # for knitting RMarkdown 
+library("janitor")    # for cleaning column names
+library("broom")      # for tidying up linear models 
+library("tidyverse")  # for wrangling, plotting, etc.
+```
+
+
+```{r}
+#load data
+survey <- read.csv("survey.csv")  
+```
+
+## Step 2: Visualize Data
+```{r}
+base <- ggplot(survey, aes(x=HourPhone, y=TimeBed)) + geom_point()
+base + xlab("Screen Time (hr)") + ylab("Bed Time (time)")
+base + geom_smooth(method="lm", se=TRUE, fullrange=FALSE, level=0.95) # for linear fit
+base + geom_hline(yintercept=mean(survey$TimeBed), color = "red") # for compact
+```
+
+## Step 3: Fit Models
+Define and fit the compact model (Model C): $$Y_{i} = \beta_{0} + \epsilon_{i}$$
+```{r}
+# fit compact model
+fit_compact = tidy(lm(TimeBed ~ 1, data = survey))
+# plot the data with model prediction
+ggplot(data = survey,
+       aes(x = HourPhone, y = TimeBed)) + 
+  geom_hline(yintercept = fit_compact$estimate,
+             color = "red") +
+  geom_point(size = 3) +
+  xlab("Screen Time (hr)") + ylab("Bed Time (time)")
+```
+Define and fit the augmented model (Model A): $$Y_{i} = \beta_{0} + \beta_{1}X_{i}+ \epsilon_{i}$$
+```{r}
+# fit compact model
+fit_augmented = tidy(lm(TimeBed ~ HourPhone, data = survey))
+# plot the data with model prediction
+ggplot(data = survey,
+       aes(x = HourPhone, y = TimeBed)) + 
+  geom_abline(intercept = fit_augmented$estimate[1],
+              slope = fit_augmented$estimate[2],
+              color = "blue") +
+  geom_point(size = 3) +
+  xlab("Screen Time (hr)") + ylab("Bed Time (time)")
+summary(lm(TimeBed ~ HourPhone, data = survey))
+```
+```{r}
+# pearson correlation
+test <- cor.test(survey$HourPhone, survey$TimeBed)
+```
+## Step4: Compare Models
+```{r}
+# visualize residuals
+lm.compact = lm(TimeBed ~ 1, data = survey)
+# store the model information
+df.compact_summary = tidy(lm.compact)
+
+# plot model prediction with residuals
+ggplot(data = augment(lm.compact),
+       aes(x = survey$HourPhone,
+           y = survey$TimeBed)) +
+  geom_hline(yintercept = df.compact_summary$estimate,
+             color = "red",
+              size = 1) +
+  geom_segment(aes(xend = survey$HourPhone,
+                   yend = df.compact_summary$estimate),
+               color = "red") + 
+  xlab("Screen Time (hr)") + 
+  ylab("BedTime (time)") +
+  geom_point(size = 2) 
+```
+```{r}
+# visualize residuals
+lm.augmented = lm(TimeBed ~ HourPhone, data = survey)
+# store the model information
+df.augmented_summary = tidy(lm.augmented)
+
+# plot model prediction with residuals
+ggplot(data = clean_names(augment(lm.augmented)),
+       aes(x = survey$HourPhone,
+           y = survey$TimeBed)) +
+  geom_hline(yintercept = df.augmented_summary$estimate,
+             color = "blue",
+              size = 1) +
+  geom_segment(aes(xend = survey$HourPhone,
+              yend = df.augmented_summary$estimate),
+               color = "blue") + 
+  xlab("Screen Time (hr)") + 
+  ylab("BedTime (time)") +
+  geom_point(size = 2) 
+```
+
+## Residuals 
+
+```{r}
+lm.compact <- lm(TimeBed ~ 1, data = survey)
+df.compact_model = augment(lm.compact)
+SSE_compact = sum(df.compact_model$.resid^2)
+lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
+df.augmented_model = augment(lm.augmented)
+SSE_augmented = sum(df.augmented_model$.resid^2)
+```
