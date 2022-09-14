@@ -77,29 +77,56 @@ ggplot(data = augment(lm.compact),
   xlab("Screen Time (hr)") + 
   ylab("BedTime (time)") +
   geom_point(size = 2) 
+
+# plot histogram of residuals
+ggplot(df.compact_model, aes(x=.resid)) + 
+  geom_histogram(binwidth=.5) +
+  xlab("Residual") +
+  ylab("Frequency")
 ```
 ```{r}
 # visualize residuals
 lm.augmented = lm(TimeBed ~ HourPhone, data = survey)
 # store the model information
 df.augmented_summary = tidy(lm.augmented)
+# create a data frame that contains the residuals
+df.augmented_model = augment(lm.augmented) %>% 
+  clean_names() #%>% 
+  #left_join(survey, by = c("TimeBed", "HourPhone"))
+
 
 # plot model prediction with residuals
-ggplot(data = clean_names(augment(lm.augmented)),
-       aes(x = survey$HourPhone,
-           y = survey$TimeBed)) +
-  geom_hline(yintercept = df.augmented_summary$estimate,
+ggplot(data = augment(lm.augmented),
+       aes(x = HourPhone,
+           y = TimeBed)) +
+  geom_abline(intercept = df.augmented_summary$estimate[1],
+              slope = df.augmented_summary$estimate[2],
              color = "blue",
               size = 1) +
-  geom_segment(aes(xend = survey$HourPhone,
-              yend = df.augmented_summary$estimate),
+  geom_segment(aes(xend = HourPhone,
+              yend = .fitted),
                color = "blue") + 
   xlab("Screen Time (hr)") + 
   ylab("BedTime (time)") +
   geom_point(size = 2) 
-```
 
-## Residuals 
+# plot histogram of residuals
+ggplot(df.augmented_model, aes(x=resid)) + 
+  geom_histogram(binwidth=.25) +
+  xlab("Residual") +
+  ylab("Frequency")
+
+# plot residual varies with x
+ggplot(data = df.augmented_model,
+       aes(x = hour_phone,
+           y = resid)) + 
+  geom_hline(yintercept = 0,
+             color = "black",
+              size = 1) +
+  geom_point(size = 2) +
+  ylab("Residual") +
+  xlab("Screen Time (hr)")
+```
 
 ```{r}
 lm.compact <- lm(TimeBed ~ 1, data = survey)
@@ -109,3 +136,4 @@ lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
 df.augmented_model = augment(lm.augmented)
 SSE_augmented = sum(df.augmented_model$.resid^2)
 ```
+
