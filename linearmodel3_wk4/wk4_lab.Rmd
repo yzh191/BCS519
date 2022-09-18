@@ -16,6 +16,8 @@ library("tidyverse")  # for wrangling, plotting, etc.
 ```{r}
 #load data
 survey <- read.csv("survey.csv")  
+data <- read.csv("data_rt_soa.csv") %>%
+                  mutate(cue_type = factor(cue_type), soa = factor(soa))
 ```
 
 ## Step 2: Visualize Data
