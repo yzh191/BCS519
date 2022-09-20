@@ -1,5 +1,5 @@
 ---
-title: "Linear Models 1 (Lecture)"
+title: "Linear Models 3 (Lecture)"
 output:
   html_document:
     df_print: paged
@@ -147,4 +147,5 @@ lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
 df.augmented_model = augment(lm.augmented)
 SSE_augmented = sum(df.augmented_model$.resid^2)
 ```
+
 
