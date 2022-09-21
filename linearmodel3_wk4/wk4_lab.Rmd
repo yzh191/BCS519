@@ -1,33 +1,139 @@
 ---
-title: "Linear Models 3 (Lecture)"
+title: "Linear Models 3 (Lab)"
 output:
   html_document:
     df_print: paged
 ---
-
+## Pre-lab
 ```{r}
+# import libraries
+library("tidyverse")  # for wrangling, plotting, etc.
 library("knitr")      # for knitting RMarkdown 
 library("janitor")    # for cleaning column names
 library("broom")      # for tidying up linear models 
-library("tidyverse")  # for wrangling, plotting, etc.
-```
 
-
-```{r}
-#load data
-#survey <- read.csv("survey.csv")  
-data <- read.csv("data_rt_soa.csv") %>%
+# load data
+data <- read.csv("data_pc_soa.csv") %>%
                   mutate(cue_type = factor(cue_type), soa = factor(soa))
+
+# visualize data at SOA of 100 ms only
+data_mod <- data[data$soa == 100,]
+ggplot(data = data_mod,
+       aes(x = cue_type, y = pc)) + 
+  geom_point(alpha = 0.2,
+             position = position_jitter(height = 0, width = 0.1)) +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "linerange",
+               size = 1) + 
+  stat_summary(fun = "mean",
+               geom = "point",
+               shape = 21,
+               size = 4) +
+  labs(y = "Proportion Correct (%)", x = "Trial Type")
+```
+## One-way ANOVA
+Perform an one-way ANOVA on proportion correct by holding SOA constant at **100 ms** using only **cue_type** as the factor (aka. using `data_mod`). Print the summary of the ANOVA results.
+```{r}
+aov1 <- aov(pc ~ cue_type, data_mod)
+summary(aov1)
+```
+## Linear Model Approach
+Fit a compact model and a augmented model to `data_mod`. And plot each model with residuals.
+```{r}
+# fit models
+fit_c = lm(formula = pc ~ 1, data)
+fit_a = lm(formula = pc ~ cue_type, data)
 ```
 
-## Step 2: Visualize Data
 ```{r}
-# Histogram Reaction Time 
-data %>%
-  ggplot(mapping = aes(x = pc, fill = cue_type)) +
-  geom_histogram()
+# plot compact
+set.seed(1)
+data.plot = data %>% 
+  mutate(cue_type_jitter = 1 + runif(n(), min = -0.15, max = 0.15))
 
-#
+data.augment = fit_c %>% 
+  augment() %>% 
+  clean_names() %>% 
+  bind_cols(data.plot %>% 
+              select(cue_type, cue_type_jitter))
+
+ggplot(data = data.plot, 
+       mapping = aes(x = cue_type_jitter,
+                     y = pc,
+                     fill = cue_type)) + 
+  geom_hline(yintercept = mean(data$pc)) +
+  geom_point(alpha = 0.5) + 
+  geom_segment(data = data.augment,
+               mapping = aes(xend = cue_type_jitter,
+                             yend = fitted),
+               alpha = 0.2) +
+  labs(y = "Meowmeow beans") + 
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank())
+```
+
+```{r}
+# Plot augmented
+set.seed(1)
+df.plot = data %>% 
+  mutate(cue_type_jitter = cue_type %>% 
+           as.numeric(),
+          cue_type_jitter = cue_type_jitter + runif(n(), min = -0.2, max = 0.2))
+
+df.tidy = fit_a %>% 
+  tidy() %>% 
+  select(where(is.numeric)) %>% 
+  mutate(across(.fns = ~ round(., digits = 2)))
+
+df.augment = fit_a %>% 
+  augment() %>%
+  clean_names() %>% 
+  bind_cols(df.plot %>% 
+              select(cue_type_jitter))
+
+ggplot(data = df.plot,
+       mapping = aes(x = cue_type_jitter,
+                     y = pc,
+                     color = cue_type)) + 
+  geom_point(alpha = 0.8) +
+  geom_segment(data = NULL,
+               mapping = aes(x = 0.6,
+                             xend = 1.4,
+                             y = df.tidy$estimate[1],
+                             yend = df.tidy$estimate[1]),
+               color = "lightpink",
+               size = 1) +
+  geom_segment(data = NULL,
+               aes(x = 1.6,
+                   xend = 2.4,
+                   y = df.tidy$estimate[1] + df.tidy$estimate[2],
+                   yend = df.tidy$estimate[1] + df.tidy$estimate[2]),
+               color = "lightblue",
+               size = 1) +
+  geom_segment(data = NULL,
+               aes(x = 2.6,
+                   xend = 3.4,
+                   y = df.tidy$estimate[1] + df.tidy$estimate[3],
+                   yend = df.tidy$estimate[1] + df.tidy$estimate[3]),
+               color = "peachpuff",
+               size = 1) +
+  geom_segment(data = df.augment,
+               aes(xend = cue_type_jitter,
+                   y = pc,
+                   yend = fitted),
+               alpha = 0.3) +
+  labs(y = "Proportion Correct (%)") + 
+  scale_color_manual(values = c("lightpink", "lightblue", "peachpuff")) + 
+  scale_x_continuous(breaks = 1:3, labels = c("invalid", "neutral", "valid")) + 
+  theme(legend.position = "none",
+        axis.title.x = element_blank())
+```
+
+## Two-way ANOVA
+Visualize all data in one plot. Both factors should be included (SOA and cue type). 
+```{r}
+# visualize data
 data %>%
   ggplot(mapping = aes(x = pc,y = soa, fill = cue_type)) +
   geom_boxplot(notch = FALSE) +
@@ -36,116 +142,3 @@ data %>%
   ylab("SOA (ms)") +
   scale_size_area("Cue Type")
 ```
-
-## Step 3: Fit Models
-Define and fit the compact model (Model C): $$Y_{i} = \beta_{0} + \epsilon_{i}$$
-```{r}
-# fit compact model
-fit_compact = tidy(lm(TimeBed ~ 1, data = survey))
-# plot the data with model prediction
-ggplot(data = survey,
-       aes(x = HourPhone, y = TimeBed)) + 
-  geom_hline(yintercept = fit_compact$estimate,
-             color = "red") +
-  geom_point(size = 3) +
-  xlab("Screen Time (hr)") + ylab("Bed Time (time)")
-```
-Define and fit the augmented model (Model A): $$Y_{i} = \beta_{0} + \beta_{1}X_{i}+ \epsilon_{i}$$
-```{r}
-# fit compact model
-fit_augmented = tidy(lm(TimeBed ~ HourPhone, data = survey))
-# plot the data with model prediction
-ggplot(data = survey,
-       aes(x = HourPhone, y = TimeBed)) + 
-  geom_abline(intercept = fit_augmented$estimate[1],
-              slope = fit_augmented$estimate[2],
-              color = "blue") +
-  geom_point(size = 3) +
-  xlab("Screen Time (hr)") + ylab("Bed Time (time)")
-summary(lm(TimeBed ~ HourPhone, data = survey))
-```
-```{r}
-# pearson correlation
-test <- cor.test(survey$HourPhone, survey$TimeBed)
-```
-## Step4: Compare Models
-```{r}
-# visualize residuals
-lm.compact = lm(TimeBed ~ 1, data = survey)
-# store the model information
-df.compact_summary = tidy(lm.compact)
-
-# plot model prediction with residuals
-ggplot(data = augment(lm.compact),
-       aes(x = survey$HourPhone,
-           y = survey$TimeBed)) +
-  geom_hline(yintercept = df.compact_summary$estimate,
-             color = "red",
-              size = 1) +
-  geom_segment(aes(xend = survey$HourPhone,
-                   yend = df.compact_summary$estimate),
-               color = "red") + 
-  xlab("Screen Time (hr)") + 
-  ylab("BedTime (time)") +
-  geom_point(size = 2) 
-
-# plot histogram of residuals
-ggplot(df.compact_model, aes(x=.resid)) + 
-  geom_histogram(binwidth=.5) +
-  xlab("Residual") +
-  ylab("Frequency")
-```
-```{r}
-# visualize residuals
-lm.augmented = lm(TimeBed ~ HourPhone, data = survey)
-# store the model information
-df.augmented_summary = tidy(lm.augmented)
-# create a data frame that contains the residuals
-df.augmented_model = augment(lm.augmented) %>% 
-  clean_names() #%>% 
-  #left_join(survey, by = c("TimeBed", "HourPhone"))
-
-
-# plot model prediction with residuals
-ggplot(data = augment(lm.augmented),
-       aes(x = HourPhone,
-           y = TimeBed)) +
-  geom_abline(intercept = df.augmented_summary$estimate[1],
-              slope = df.augmented_summary$estimate[2],
-             color = "blue",
-              size = 1) +
-  geom_segment(aes(xend = HourPhone,
-              yend = .fitted),
-               color = "blue") + 
-  xlab("Screen Time (hr)") + 
-  ylab("BedTime (time)") +
-  geom_point(size = 2) 
-
-# plot histogram of residuals
-ggplot(df.augmented_model, aes(x=resid)) + 
-  geom_histogram(binwidth=.25) +
-  xlab("Residual") +
-  ylab("Frequency")
-
-# plot residual varies with x
-ggplot(data = df.augmented_model,
-       aes(x = hour_phone,
-           y = resid)) + 
-  geom_hline(yintercept = 0,
-             color = "black",
-              size = 1) +
-  geom_point(size = 2) +
-  ylab("Residual") +
-  xlab("Screen Time (hr)")
-```
-
-```{r}
-lm.compact <- lm(TimeBed ~ 1, data = survey)
-df.compact_model = augment(lm.compact)
-SSE_compact = sum(df.compact_model$.resid^2)
-lm.augmented <- lm(TimeBed ~ HourPhone, data = survey)
-df.augmented_model = augment(lm.augmented)
-SSE_augmented = sum(df.augmented_model$.resid^2)
-```
-
-
