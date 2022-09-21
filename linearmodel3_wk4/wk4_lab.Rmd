@@ -4,7 +4,9 @@ output:
   html_document:
     df_print: paged
 ---
+
 ## Pre-lab
+
 ```{r}
 # import libraries
 library("tidyverse")  # for wrangling, plotting, etc.
@@ -31,14 +33,20 @@ ggplot(data = data_mod,
                size = 4) +
   labs(y = "Proportion Correct (%)", x = "Trial Type")
 ```
+
 ## One-way ANOVA
+
 Perform an one-way ANOVA on proportion correct by holding SOA constant at **100 ms** using only **cue_type** as the factor (aka. using `data_mod`). Print the summary of the ANOVA results.
+
 ```{r}
 aov1 <- aov(pc ~ cue_type, data_mod)
 summary(aov1)
 ```
+
 ## Linear Model Approach
+
 Fit a compact model and a augmented model to `data_mod`. And plot each model with residuals.
+
 ```{r}
 # fit models
 fit_c = lm(formula = pc ~ 1, data)
@@ -130,15 +138,47 @@ ggplot(data = df.plot,
         axis.title.x = element_blank())
 ```
 
+## Contrasts
+
+1.  Print the contrast matrix of all independent variables and identify the type of coding (hint: `?contrasts`)
+
+```{r echo=TRUE}
+# Contrast matrices for each indp. var
+contrasts(data$cue_type)
+contrasts(data$soa)
+```
+  a. Which cue type is the baseline?
+  
+2.  Change the contrast matrix of `data$cue_type` so the cue_type is the baseline. (hint: `contrasts(data$cue_type) <- <your contrast matrix>`)
+
+  a. Redo your linear-model based analysis using the new effect coding:
+  
+  b. What do you notice about the F-statistic when compared to your original model? Why is this the case?
+  
+  c. What do you notice about the P-Value of each coefficient?
+  
+  d. Interpret the new coefficients in the context of this new coding
+  
 ## Two-way ANOVA
-Visualize all data in one plot. Both factors should be included (SOA and cue type). 
+
+1.  Visualize the proportion of correct trials (`data$pc`) for both factors (`data$soa` and `data$cue_type`) using boxplots. Let the x-axis represent the two SOAs and use different colors to represent the trial types (hint: `aes(x = soa, y = pc, fill = cue_type)`).
+
 ```{r}
 # visualize data
 data %>%
-  ggplot(mapping = aes(x = pc,y = soa, fill = cue_type)) +
+  ggplot(mapping = aes(x = soa,y = pc, fill = cue_type)) +
   geom_boxplot(notch = FALSE) +
-  coord_flip() +
-  xlab("Proportion Correct") +
-  ylab("SOA (ms)") +
+  ylab("Proportion Correct") +
+  xlab("SOA (ms)") +
   scale_size_area("Cue Type")
 ```
+
+2. Run an ANOVA to analyze the effect of both independent variables on the proportion correct
+
+  a. Without interaction
+  
+  b. With interaction
+  
+  c. Choose a model that best characterizes the effect
+  
+  d. Report the statistics
