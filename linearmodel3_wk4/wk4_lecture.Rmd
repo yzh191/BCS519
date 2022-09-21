@@ -6,8 +6,8 @@ output:
 ---
 
 ```{r}
-library("knitr")      # for knitting RMarkdown 
 library("tidyverse")  # for wrangling, plotting, etc.
+library("knitr")      # for knitting RMarkdown 
 library("janitor")    # for cleaning column names
 library("broom")      # for tidying up linear models 
 theme_set(theme_bw() + #set the theme 
@@ -48,7 +48,11 @@ ggplot(data = df,
                size = 4) +
   labs(y = "Meowmeow beans")
 ```
-
+## One-way ANOVA
+```{r}
+aov1<-aov(beans~factor(pet), df)
+summary(aov1)
+```
 ## Model fitting
 ```{r}
 fit_c = lm(formula = beans ~ 1, data = df)
