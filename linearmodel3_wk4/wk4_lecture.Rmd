@@ -6,9 +6,9 @@ output:
 ---
 
 ```{r}
-library("tidyverse")  # for wrangling, plotting, etc.
 library("knitr")      # for knitting RMarkdown 
 library("janitor")    # for cleaning column names
+library("tidyverse")  # for wrangling, plotting, etc.
 library("broom")      # for tidying up linear models 
 theme_set(theme_bw() + #set the theme 
             theme(text = element_text(size = 16))) #set the default text size
@@ -19,15 +19,15 @@ theme_set(theme_bw() + #set the theme
 set.seed(124)
 mu_cat = 50
 sig_cat = 6
-cat = rnorm(100,mu_cat,sig_cat)
+cat = rnorm(5,mu_cat,sig_cat)
 
 mu_dog = 20
 sig_dog = 6
-dog = rnorm(100,mu_dog,sig_dog)
+dog = rnorm(5,mu_dog,sig_dog)
 
 mu_hampster = 20
 sig_hampster = 6
-hampster = rnorm(100,mu_hampster,sig_hampster)
+hampster = rnorm(5,mu_hampster,sig_hampster)
 
 ```
 
@@ -74,11 +74,11 @@ ggplot(data = df.plot,
                      y = beans,
                      fill = pet)) + 
   geom_hline(yintercept = mean(df$beans)) +
-  geom_point(alpha = 0.5) + 
+  geom_point() + 
   geom_segment(data = df.augment,
                mapping = aes(xend = pet_jitter,
                              yend = fitted),
-               alpha = 0.2) +
+               alpha = 0.8) +
   labs(y = "Meowmeow beans") + 
   theme(legend.position = "none",
         axis.text.x = element_blank(),
@@ -109,7 +109,7 @@ ggplot(data = df.plot,
        mapping = aes(x = pet_jitter,
                      y = beans,
                      color = pet)) + 
-  geom_point(alpha = 0.8) +
+  geom_point() +
   geom_segment(data = NULL,
                mapping = aes(x = 0.6,
                              xend = 1.4,
@@ -129,15 +129,14 @@ ggplot(data = df.plot,
                    xend = 3.4,
                    y = df.tidy$estimate[1] + df.tidy$estimate[3],
                    yend = df.tidy$estimate[1] + df.tidy$estimate[3]),
-               color = "peachpuff",
+               color = "lightgreen",
                size = 1) +
   geom_segment(data = df.augment,
                aes(xend = pet_jitter,
                    y = beans,
-                   yend = fitted),
-               alpha = 0.3) +
+                   yend = fitted),) +
   labs(y = "Meowmeow beans") + 
-  scale_color_manual(values = c("lightpink", "lightblue", "peachpuff")) + 
+  scale_color_manual(values = c("lightpink", "lightblue", "lightgreen")) + 
   scale_x_continuous(breaks = 1:3, labels = c("cat", "dog", "hampster")) + 
   theme(legend.position = "none",
         axis.title.x = element_blank())

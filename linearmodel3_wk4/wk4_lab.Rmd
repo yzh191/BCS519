@@ -5,6 +5,10 @@ output:
     df_print: paged
 ---
 
+## Introduction
+
+This is a dataset of a classical Posner task where subjects were cued to shift their attention towards one location on the screen. They were then asked to discriminate the orientation of a tilted bar on either the same location they were cued to (valid) or the opposite location from the cued location (invalid). Some trials did not contain a cue (neutral).
+
 ## Pre-lab
 
 ```{r}
@@ -17,125 +21,32 @@ library("broom")      # for tidying up linear models
 # load data
 data <- read.csv("data_pc_soa.csv") %>%
                   mutate(cue_type = factor(cue_type), soa = factor(soa))
+```
+Visualize data at SOA of 100 ms only. x-axis: invalid, neutral, valid; y-axis: pc (proportion correct) with error bars of confidence intervals or standard deviations.
+```{r}
+data_mod <- data[data$soa == 100,] # extract data of 100 ms SOA 
+# complete the code here
 
-# visualize data at SOA of 100 ms only
-data_mod <- data[data$soa == 100,]
-ggplot(data = data_mod,
-       aes(x = cue_type, y = pc)) + 
-  geom_point(alpha = 0.2,
-             position = position_jitter(height = 0, width = 0.1)) +
-  stat_summary(fun.data = "mean_cl_boot",
-               geom = "linerange",
-               size = 1) + 
-  stat_summary(fun = "mean",
-               geom = "point",
-               shape = 21,
-               size = 4) +
-  labs(y = "Proportion Correct (%)", x = "Trial Type")
 ```
 
 ## One-way ANOVA
 
-Perform an one-way ANOVA on proportion correct by holding SOA constant at **100 ms** using only **cue_type** as the factor (aka. using `data_mod`). Print the summary of the ANOVA results.
+Perform an one-way ANOVA on proportion correct by holding SOA constant at **100 ms** using only **cue_type** as the factor (aka. using `data_mod`). Print the summary of the ANOVA results. Use function `aov()`.
 
 ```{r}
-aov1 <- aov(pc ~ cue_type, data_mod)
-summary(aov1)
+# perform one-way ANOVA
 ```
 
 ## Linear Model Approach
 
-Fit a compact model and a augmented model to `data_mod`. And plot each model with residuals.
-
+Fit a compact model and a augmented model to `data_mod`. Use function `lm()`.
 ```{r}
 # fit models
-fit_c = lm(formula = pc ~ 1, data)
-fit_a = lm(formula = pc ~ cue_type, data)
 ```
 
+Run an ANOVA test on the two models. Use function `anova()`
 ```{r}
-# plot compact
-set.seed(1)
-data.plot = data %>% 
-  mutate(cue_type_jitter = 1 + runif(n(), min = -0.15, max = 0.15))
-
-data.augment = fit_c %>% 
-  augment() %>% 
-  clean_names() %>% 
-  bind_cols(data.plot %>% 
-              select(cue_type, cue_type_jitter))
-
-ggplot(data = data.plot, 
-       mapping = aes(x = cue_type_jitter,
-                     y = pc,
-                     fill = cue_type)) + 
-  geom_hline(yintercept = mean(data$pc)) +
-  geom_point(alpha = 0.5) + 
-  geom_segment(data = data.augment,
-               mapping = aes(xend = cue_type_jitter,
-                             yend = fitted),
-               alpha = 0.2) +
-  labs(y = "Meowmeow beans") + 
-  theme(legend.position = "none",
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank())
-```
-
-```{r}
-# Plot augmented
-set.seed(1)
-df.plot = data %>% 
-  mutate(cue_type_jitter = cue_type %>% 
-           as.numeric(),
-          cue_type_jitter = cue_type_jitter + runif(n(), min = -0.2, max = 0.2))
-
-df.tidy = fit_a %>% 
-  tidy() %>% 
-  select(where(is.numeric)) %>% 
-  mutate(across(.fns = ~ round(., digits = 2)))
-
-df.augment = fit_a %>% 
-  augment() %>%
-  clean_names() %>% 
-  bind_cols(df.plot %>% 
-              select(cue_type_jitter))
-
-ggplot(data = df.plot,
-       mapping = aes(x = cue_type_jitter,
-                     y = pc,
-                     color = cue_type)) + 
-  geom_point(alpha = 0.8) +
-  geom_segment(data = NULL,
-               mapping = aes(x = 0.6,
-                             xend = 1.4,
-                             y = df.tidy$estimate[1],
-                             yend = df.tidy$estimate[1]),
-               color = "lightpink",
-               size = 1) +
-  geom_segment(data = NULL,
-               aes(x = 1.6,
-                   xend = 2.4,
-                   y = df.tidy$estimate[1] + df.tidy$estimate[2],
-                   yend = df.tidy$estimate[1] + df.tidy$estimate[2]),
-               color = "lightblue",
-               size = 1) +
-  geom_segment(data = NULL,
-               aes(x = 2.6,
-                   xend = 3.4,
-                   y = df.tidy$estimate[1] + df.tidy$estimate[3],
-                   yend = df.tidy$estimate[1] + df.tidy$estimate[3]),
-               color = "peachpuff",
-               size = 1) +
-  geom_segment(data = df.augment,
-               aes(xend = cue_type_jitter,
-                   y = pc,
-                   yend = fitted),
-               alpha = 0.3) +
-  labs(y = "Proportion Correct (%)") + 
-  scale_color_manual(values = c("lightpink", "lightblue", "peachpuff")) + 
-  scale_x_continuous(breaks = 1:3, labels = c("invalid", "neutral", "valid")) + 
-  theme(legend.position = "none",
-        axis.title.x = element_blank())
+# run ANOVA
 ```
 
 ## Contrasts
@@ -144,41 +55,34 @@ ggplot(data = df.plot,
 
 ```{r echo=TRUE}
 # Contrast matrices for each indp. var
-contrasts(data$cue_type)
-contrasts(data$soa)
 ```
-  a. Which cue type is the baseline?
-  
+
+    a.  Which cue type is the baseline?
+
 2.  Change the contrast matrix of `data$cue_type` so the cue_type is the baseline. (hint: `contrasts(data$cue_type) <- <your contrast matrix>`)
 
-  a. Redo your linear-model based analysis using the new effect coding:
-  
-  b. What do you notice about the F-statistic when compared to your original model? Why is this the case?
-  
-  c. What do you notice about the P-Value of each coefficient?
-  
-  d. Interpret the new coefficients in the context of this new coding
-  
+    a.  Redo your linear-model based analysis using the new effect coding:
+
+    b.  What do you notice about the F-statistic when compared to your original model? Why is this the case?
+
+    c.  What do you notice about the P-Value of each coefficient?
+
+    d.  Interpret the new coefficients in the context of this new coding
+
 ## Two-way ANOVA
 
 1.  Visualize the proportion of correct trials (`data$pc`) for both factors (`data$soa` and `data$cue_type`) using boxplots. Let the x-axis represent the two SOAs and use different colors to represent the trial types (hint: `aes(x = soa, y = pc, fill = cue_type)`).
 
 ```{r}
 # visualize data
-data %>%
-  ggplot(mapping = aes(x = soa,y = pc, fill = cue_type)) +
-  geom_boxplot(notch = FALSE) +
-  ylab("Proportion Correct") +
-  xlab("SOA (ms)") +
-  scale_size_area("Cue Type")
 ```
 
-2. Run an ANOVA to analyze the effect of both independent variables on the proportion correct
+2.  Run an ANOVA to analyze the effect of both independent variables on the proportion correct
 
-  a. Without interaction
-  
-  b. With interaction
-  
-  c. Choose a model that best characterizes the effect
-  
-  d. Report the statistics
+    a.  Without interaction
+
+    b.  With interaction
+
+    c.  Choose a model that best characterizes the effect
+
+    d.  Report the statistics
