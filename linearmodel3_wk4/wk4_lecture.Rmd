@@ -3,6 +3,7 @@ title: "Linear Models 3 (Lecture)"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r}
@@ -13,7 +14,9 @@ library("broom")      # for tidying up linear models
 theme_set(theme_bw() + #set the theme 
             theme(text = element_text(size = 16))) #set the default text size
 ```
+
 ## Generate dataset
+
 ```{r}
 #population distribution
 set.seed(124)
@@ -32,9 +35,10 @@ hampster = rnorm(5,mu_hampster,sig_hampster)
 ```
 
 ## Visualize dataset
+
 ```{r}
 df<-tibble(cat, dog, hampster)
-df<-pivot_longer(df, everything(), names_to = "pet", values_to = "beans")
+df<-pivot_longer(df, everything(), names_to = "pet", values_to = "beans") %>% mutate(pet = factor(pet))
 ggplot(data = df,
        aes(x = pet, y = beans)) + 
   geom_point(alpha = 0.2,
@@ -48,12 +52,16 @@ ggplot(data = df,
                size = 4) +
   labs(y = "Meowmeow beans")
 ```
+
 ## One-way ANOVA
+
 ```{r}
 aov1<-aov(beans~factor(pet), df)
 summary(aov1)
 ```
+
 ## Model fitting
+
 ```{r}
 fit_c = lm(formula = beans ~ 1, data = df)
 fit_a = lm(formula = beans ~ pet, data = df)
@@ -141,3 +149,197 @@ ggplot(data = df.plot,
   theme(legend.position = "none",
         axis.title.x = element_blank())
 ```
+
+### Dummy Coding (Default for `factors` in R)
+```{r}
+# Print the contrast matrix
+df.dum <- df %>% filter(pet %in% c("dog", "cat")) %>% mutate(pet = factor(pet))
+lm.dum <- df.dum %>% lm(formula = beans ~ pet);
+
+df.dum %>%
+  pull(pet) %>% contrasts() %>%
+  kable()
+```
+### Sum Coding
+
+1.  Extract just Dog and Cat
+
+```{r}
+df.sum_coded <- df %>% filter(pet %in% c("dog", "cat")) %>%
+  mutate(pet = factor(pet))
+```
+
+2.  Set the coding (contrast) to `contr.sum`
+
+```{r}
+contrasts(df.sum_coded$pet) <- contr.sum(2) # n-levels = 2
+```
+
+3.  (Optional) Change column names so we can easily interpret later
+
+```{r}
+colnames(attr(df.sum_coded$pet, "contrasts")) <- c("->vs_GrandMean")
+contrasts(df.sum_coded$pet) %>% kable()
+```
+
+4.  Run the analysis
+
+```{r}
+lm.sum <- df.sum_coded %>% lm(formula = beans ~ pet);
+  
+lm.sum %>%
+  summary() %>%
+  tidy() %>%
+  kable()
+```
+
+## Are F-statistics the same?
+
+### Dummy coded
+```{r}
+lm.dum %>% anova() %>% tidy() %>% kable()
+```
+
+### Sum coded
+```{r}
+lm.sum %>% anova() %>% tidy() %>% kable()
+```
+
+# How do the models differ?
+## Predictions based on the model
+```{r}
+pred.dum <- predict(lm.dum, data.frame(pet = levels(df.dum$pet))) %>% round(2);
+pred.sum <- predict(lm.sum, data.frame(pet = levels(df.sum_coded$pet))) %>% round(2);
+```
+
+## Dummy Coding Visualization
+```{r}
+ggplot(mapping = aes(x = factor(c(0, 1)), y = pred.dum, label = pred.dum, vjust=1, hjust=-1)) +
+  geom_point() + geom_text() +
+  geom_hline( mapping = aes(yintercept = pred.dum[1]), color = "red") + 
+  geom_text(mapping = aes(0, pred.dum[1], label = paste("B_0 = ", pred.dum[1] , " (Cat Mean)"), vjust= 1.3, hjust = -0.1)) +
+  geom_segment(x = factor(1), y = pred.dum[1], xend = factor(1), yend = pred.dum[2], size = 1, arrow = arrow()) + 
+  labs(title = "Dummy Coded", x = "Value Plugged into Model", y = "Prediction (Beans)");
+```
+
+## Sum Coding Visualization
+```{r}
+mu.dogCat <- round(mean(df.sum_coded$beans), 2)
+ggplot(mapping = aes(x = factor(c("-1", "1")), y = pred.dum, label = pred.sum, vjust=1, hjust=-1)) +
+  geom_point() + geom_text() +
+  geom_hline( mapping = aes(yintercept = mu.dogCat), color = "green") + 
+  geom_text(mapping = aes(0, mu.dogCat, label = paste("B_0 = ", mu.dogCat , " (Grand Mean)"), vjust= -1, hjust = -0.1)) +
+  geom_segment(x = "-1", y = mu.dogCat, xend = "-1", yend = pred.sum[1], size = 1, arrow = arrow()) + 
+  geom_segment(x = factor(1), y = mu.dogCat, xend = factor(1), yend = pred.sum[2], size = 1, arrow = arrow()) + 
+  labs(title = "Sum Coded", x = "Value Plugged into Model", y = "Prediction (Beans)");
+```
+## Comapring the Coefficients
+```{r, echo=FALSE}
+lm.dum %>% summary() %>% tidy() %>% kable
+lm.sum %>% summary() %>% tidy() %>% kable
+```
+
+# Categorical Variable with 3 Levels
+## Dummy Coding
+### Contrasts
+```{r, echo=FALSE}
+contrasts(df$pet) %>% kable();
+```
+
+### Coefficients
+```{r, echo = FALSE}
+lm.dum <- df %>% lm(formula = beans ~ pet);
+summary(lm.dum) %>% tidy() %>% kable();
+```
+### Model
+$$ \text{Beans} = `r lm.dum$coefficients[1]` `r lm.dum$coefficients[2]` (\text{Dog}) `r lm.dum$coefficients[3]` (\text{Hamster}) $$
+
+### Visualize
+
+```{r, echo=FALSE}
+ggplot(mapping = aes(x = df$pet, y = predict(lm.dum))) +
+  geom_point() + 
+  geom_hline(yintercept = lm.dum$coefficients[1], color = "green") + 
+  geom_text(label = round(predict(lm.dum), 2), vjust = 1) +
+  geom_segment(aes(x = df$pet[2], y = predict(lm.dum)[1], xend = df$pet[2], yend = predict(lm.dum)[2]), arrow = arrow()) +
+  geom_segment(aes(x = df$pet[3], y = predict(lm.dum)[1], xend = df$pet[3], yend = predict(lm.dum)[3]), arrow = arrow()) +
+  xlab("Pet") +
+  ylab("Prediction") +
+  ggtitle("Dummy Coding");
+```
+
+## Sum Coding
+
+### Contrasts
+```{r, echo=FALSE}
+df.sum <- df %>% mutate(pet = factor(pet));
+contrast.sum <- contr.sum(3); 
+colnames(contrast.sum) <- c(":cat_vs_mean", ":dog_vs_mean");
+rownames(contrast.sum) <- levels(df$pet);
+contrast.sum %>% kable();
+```
+
+### Coefficients
+```{r, echo=FALSE}
+lm.sum <- df.sum %>% lm(formula = beans ~ pet, contrasts = list(pet = contrast.sum));
+summary(lm.sum) %>% tidy() %>% kable();
+```
+
+### Model
+$$ \text{Beans} = `r lm.sum$coefficients[1]` + `r lm.sum$coefficients[2]` X_1 `r lm.sum$coefficients[3]` X_2 $$
+
+### Visualization
+```{r, echo=FALSE}
+ggplot(mapping = aes(x = df$pet, y = predict(lm.sum))) +
+  geom_point() + 
+  geom_hline(yintercept = lm.sum$coefficients[1], color = "red") + 
+  geom_text(label = round(predict(lm.sum), 2), vjust = 1) +
+  geom_segment(aes(x = df$pet[1], y = mean(df$beans), xend = df$pet[1], yend = predict(lm.sum)[1]), arrow = arrow()) +
+  geom_segment(aes(x = df$pet[2], y = mean(df$beans), xend = df$pet[2], yend = predict(lm.sum)[2]), arrow = arrow()) +
+  geom_segment(aes(x = df$pet[3], y = mean(df$beans), xend = df$pet[3], yend = predict(lm.sum)[3]), arrow = arrow()) +
+  xlab("Pet") +
+  ylab("Prediction") +
+  ggtitle("Sum Coding");
+```
+
+# Extending beyond 3 levels
+
+## Dummy
+
+```{r, results='asis'}
+pets <- c("cat", "dog", "hamster", "turtle", "rabbit", "fish");
+for (x in 4:6) {
+  cat(paste("### ", x, " variables: "));
+  temp <- contr.treatment(x);
+  colnames(temp) <- paste("x", as.character(1:(x-1)), sep = '');
+  rownames(temp) <- as.character(pets[1:x]);
+  print(temp %>% kable(row.names = TRUE));
+}
+```
+## Sum Coding
+
+```{r, results='asis'}
+for (x in 4:6) {
+  cat(paste("### ", x, " variables: "));
+  temp <- contr.sum(x);
+  colnames(temp) <- paste("x", as.character(1:(x-1)), sep = '');
+  rownames(temp) <- as.character(pets[1:x]);
+  print(temp %>% kable(row.names = TRUE));
+}
+```
+
+# Other types of factor coding
+
+## Helmert Coding
+```{r, results='asis'}
+for (x in 4:6) {
+  cat(paste("### ", x, " variables: "));
+  temp <- contr.helmert(x);
+  colnames(temp) <- paste("x", as.character(1:(x-1)), sep = '');
+  rownames(temp) <- as.character(1:x);
+  print(temp %>% kable(row.names = TRUE));
+}
+```
+
+
+
