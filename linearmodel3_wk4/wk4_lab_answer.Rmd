@@ -50,14 +50,14 @@ Fit a compact model and a augmented model to `data_mod`. And plot each model wit
 
 ```{r}
 # fit models
-fit_c = lm(formula = pc ~ 1, data)
-fit_a = lm(formula = pc ~ cue_type, data)
+fit_c = lm(formula = pc ~ 1, data_mod)
+fit_a = lm(formula = pc ~ cue_type, data_mod)
 ```
 
 ```{r}
 # plot compact
 set.seed(1)
-data.plot = data %>% 
+data.plot = data_mod %>% 
   mutate(cue_type_jitter = 1 + runif(n(), min = -0.15, max = 0.15))
 
 data.augment = fit_c %>% 
@@ -85,7 +85,7 @@ ggplot(data = data.plot,
 ```{r}
 # Plot augmented
 set.seed(1)
-df.plot = data %>% 
+df.plot = data_mod %>% 
   mutate(cue_type_jitter = cue_type %>% 
            as.numeric(),
           cue_type_jitter = cue_type_jitter + runif(n(), min = -0.2, max = 0.2))
@@ -137,6 +137,10 @@ ggplot(data = df.plot,
   scale_x_continuous(breaks = 1:3, labels = c("invalid", "neutral", "valid")) + 
   theme(legend.position = "none",
         axis.title.x = element_blank())
+```
+```{r}
+# run anova
+anova(fit_c, fit_a)
 ```
 
 ## Contrasts
