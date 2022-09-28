@@ -149,20 +149,38 @@ anova(fit_c, fit_a)
 
 ```{r echo=TRUE}
 # Contrast matrices for each indp. var
-contrasts(data$cue_type)
-contrasts(data$soa)
+contrasts(data$cue_type) %>% kable()
+contrasts(data$soa) %>% kable();
 ```
   a. Which cue type is the baseline?
+  "invalid"
   
 2.  Change the contrast matrix of `data$cue_type` so the cue_type is the baseline. (hint: `contrasts(data$cue_type) <- <your contrast matrix>`)
 
+```{r}
+  data.new <- data %>% mutate(cue_type = factor(cue_type, levels = c("neutral", "valid", "invalid")))
+  contrasts(data.new$cue_type) %>% kable();
+```
+
   a. Redo your linear-model based analysis using the new effect coding:
+
+```{r}
+lm.new <- data.new %>% lm(formula = pc ~ cue_type);
+lm.new %>% summary() %>% tidy() %>% kable()
+```
   
   b. What do you notice about the F-statistic when compared to your original model? Why is this the case?
   
+  F-statistic remains the same. Changing the baseline does not affect the test which examines whether there is a differnce between means. 
+  
   c. What do you notice about the P-Value of each coefficient?
   
+  They have changed. The baseline shifted so the t-statistic that this coefficient is different from 0 will also be different. Each coefficient now represents the effect of either invalid or valid on the baseline neutral trial.
+  
   d. Interpret the new coefficients in the context of this new coding
+  
+  The valid condition increases the performance compared to the neutral condition by about 1.6%. The invalid cue type reduced the proportion of correct trials by about 1.4%.
+  
   
 ## Two-way ANOVA
 
@@ -181,9 +199,20 @@ data %>%
 2. Run an ANOVA to analyze the effect of both independent variables on the proportion correct
 
   a. Without interaction
-  
+```{r}
+aov(data = data, formula = pc ~ cue_type + soa) %>% summary();
+```
   b. With interaction
+```{r}
+aov(data = data, formula = pc ~ cue_type*soa) %>% summary();
+```
   
   c. Choose a model that best characterizes the effect
+
+  Both models do not significantly reduce the variance compared to the compact model. However, it seems that the second model does slightly better when the interaction term is added.
   
   d. Report the statistics
+  
+  We fail to reject the null hypothesis that the mean value of proportion correct is significantly different for different cue types $p = 0.477$. Furthermore, the mean proportion correct is not significantly different for SOAs $F=0.625, p = 0.434, Df = 1$. Finally, the interaction between SOA and cue type is not significant ($F=1.150, p = 0.326$)
+  
+  
